@@ -1,0 +1,120 @@
+:root {
+    --primary-blue: #3c9ee5;
+    --primary-purple: #7209b7;
+    --primary-green: #4CC790;
+    --primary-yellow: #ff9f00;
+    --card-bg: #ffffff;
+    --text-primary2: #666;
+    --text-header-color:#2c3e50;
+    --text-secondary: #718096;
+}
+
+.performance-container {
+    font-family: "Inter", "Segoe UI", sans-serif;
+    max-width: 1200px;
+    margin-top: var(--allindex-margin-top);
+  
+    border-radius: 0.5rem;
+    background: var(--card-bg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.performance-header {
+    display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--scoredetails-border-color);
+}
+
+.performance-header h2 {
+    color: var(--text-header-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    text-align: left;
+}
+
+.performance-metrics {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 1rem;
+    gap: 2rem;
+}
+
+.single-chart {
+    width: 30%;
+    min-width: 200px;
+    text-align: center;
+}
+
+.circular-chart {
+    display: block;
+    margin: 10px auto;
+    max-width: 80%;
+    max-height: 250px;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: #f1f5f9;
+    stroke-width: 3.8;
+}
+
+.circle {
+    fill: none;
+    stroke-width: 2.8;
+    stroke-linecap: round;
+    animation: progress 1s ease-out forwards;
+}
+
+@keyframes progress {
+    0% {
+        stroke-dasharray: 0, 100;
+    }
+}
+
+.percentage {
+    fill: var(--text-primary2);
+    font-family: "Inter", sans-serif;
+    font-size: 0.5em;
+    /* font-weight: 600; */
+    text-anchor: middle;
+}
+
+.chart-title {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    /* font-weight: 600; */
+    color: var(--text-primary2);
+}
+
+/* Color classes */
+.orange .circle {
+    stroke: var(--primary-yellow);
+}
+
+.green .circle {
+    stroke: var(--primary-green);
+}
+
+.purple .circle {
+    stroke: var(--primary-blue);
+}
+
+.blue .circle {
+    stroke: var(--primary-blue);
+}
+
+@media (max-width: 768px) {
+    .performance-metrics {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .single-chart {
+        width: 80%;
+        max-width: 250px;
+    }
+}

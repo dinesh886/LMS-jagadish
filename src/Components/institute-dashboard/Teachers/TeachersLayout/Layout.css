@@ -1,0 +1,26 @@
+/* Container for the entire layout */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+}
+
+
+
+
+.layout-content::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari */
+}
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+  .layout-main {
+    flex-direction: column;
+  }
+
+  .test-sidebar {
+    width: 100%;
+    height: auto;
+  }
+
+}

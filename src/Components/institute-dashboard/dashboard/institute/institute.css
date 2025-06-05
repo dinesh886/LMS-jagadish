@@ -1,0 +1,20 @@
+.institute-layout {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 250px; 
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    top: 0;
+  }
+.content {
+    margin-left: 229px;
+    /* margin-right: 20px; */
+    /* margin-top: 90px; */
+    padding: 20px;
+    width: 100%;
+    overflow-y: auto;
+    background-color: #F4F4F4;
+}

@@ -1,0 +1,373 @@
+
+
+
+
+.test-index-header {
+  display: flex;
+  justify-content: space-between;
+  /* Pushes the dropdown to the right */
+  align-items: center;
+  padding: 10px;
+  /* border-bottom: 1px solid #ddd; */
+}
+
+.columnvisibility-wrapper {
+  margin-left: auto;
+  /* Ensures it aligns to the right */
+}
+
+/* Index Container */
+.questionsadd-index-container {
+  margin-top: var(--allindex-margin-top);
+  background-color: var(--index-container-bg);
+  border-radius: var(--index-container-border-radius);
+  box-shadow: var(--index-container-box-shadow);
+  padding: var(--index-container-padding);
+  position: relative;
+  /* overflow: auto; */
+}
+/* NEW MOBILE DROPDOWN STYLES */
+
+/* Mobile Actions Dropdown Container */
+.mobile-actions-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Mobile Menu Trigger Button */
+.mobile-menu-trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 16px;
+  color: #6b7280;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mobile-menu-trigger:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Mobile Actions Menu */
+.mobile-actions-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  min-width: 180px;
+  overflow: hidden;
+  animation: slideDown 0.2s ease-out;
+}
+
+/* Mobile Action Item */
+.mobile-action-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.mobile-action-item:last-child {
+  border-bottom: none;
+}
+
+.mobile-action-item:hover {
+  background-color: #f9fafb;
+}
+
+/* Color-specific styles for mobile actions */
+.mobile-action-item.dispatch:hover {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.mobile-action-item.copy:hover {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.mobile-action-item.pdf:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.mobile-action-item.share:hover {
+  background-color: #f0f9ff;
+  color: #0284c7;
+}
+
+.mobile-action-item.archive:hover {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+
+.mobile-action-item.delete:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+/* Mobile Action Item Icon */
+.mobile-action-item svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Mobile Action Item Text */
+.mobile-action-item span {
+  font-weight: 500;
+}
+
+/* Animation for dropdown */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive behavior - hide desktop buttons on mobile */
+@media (max-width: 768px) {
+  .test-action-buttons .flex.gap-2 {
+    display: none;
+  }
+
+  .mobile-actions-dropdown {
+    display: block;
+  }
+}
+
+/* Show desktop buttons on larger screens */
+@media (min-width: 769px) {
+  .mobile-actions-dropdown {
+    display: none;
+  }
+
+  .test-action-buttons .flex.gap-2 {
+    display: flex;
+  }
+}
+
+/* Ensure proper positioning in table cells */
+.test-action-buttons {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Prevent dropdown from being cut off */
+.custom-data-table {
+  overflow: visible;
+}
+
+.custom-data-table td {
+  overflow: visible;
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 480px) {
+  .mobile-actions-menu {
+    min-width: 160px;
+    right: -10px;
+  }
+
+  .mobile-action-item {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .mobile-action-item svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+
+
+
+/* Add these styles to your existing QuestionsAdd.css file */
+
+/* Image handling in questions */
+.row-link img {
+  max-width: 100%;
+  height: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: block;
+}
+
+/* Modal styling for images */
+.question-detail-modal {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+ 
+}
+
+.question-detail-modal h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1a202c;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.question-content {
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #4299e1;
+}
+
+.mcq-options-modal {
+  margin-bottom: 24px;
+}
+
+.mcq-options-modal h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #2d3748;
+}
+
+.mcq-option {
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.mcq-option.correct-answer {
+  background-color: #f0fff4;
+  border-color: #9ae6b4;
+  box-shadow: 0 2px 8px rgba(72, 187, 120, 0.15);
+}
+
+.mcq-option:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* .answer-content {
+  padding: 16px;
+  background-color: #edf2f7;
+  border-radius: 8px;
+  border-left: 4px solid #38a169;
+  margin-bottom: 20px;
+} */
+
+.answer-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #2d3748;
+}
+
+.modal-footer {
+  text-align: right;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.modal-footer button {
+  background-color: #4299e1;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-footer button:hover {
+  background-color: #3182ce;
+}
+
+.question-detail-modal img {
+  max-width: 100%;
+  height: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: block;
+}
+
+.mcq-option img {
+  max-width: 100%;
+  height: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: block;
+}
+
+/* Image error handling */
+.image-error {
+  color: #718096;
+  font-style: italic;
+  padding: 16px;
+  background: #f7fafc;
+  border-radius: 8px;
+  display: block;
+  margin: 12px 0;
+  border: 2px dashed #cbd5e0;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .question-detail-modal {
+    padding: 16px;
+  }
+
+  .question-content,
+  .answer-content {
+    padding: 12px;
+  }
+
+  .mcq-option {
+    padding: 12px;
+  }
+
+  .row-link img,
+  .question-detail-modal img,
+  .mcq-option img {
+    margin: 8px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+.latex-content{
+width: 900px;
+}

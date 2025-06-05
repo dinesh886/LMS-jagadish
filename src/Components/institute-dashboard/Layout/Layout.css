@@ -1,0 +1,75 @@
+/* Container for the entire layout */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header styles */
+.layout-header {
+  background-color: #037DE2;
+  color: white;
+  padding: 15px 20px;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Main content area with sidebar */
+.layout-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar styles */
+/* .test-sidebar-container {
+  width: 240px;
+  background-color: #fff;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  height: calc(100vh);
+  position: fixed;
+  overflow-y: auto;
+} */
+
+/* Main content area */
+.main-layout-content {
+  flex: 1;
+  padding: 15px;
+  margin-left: 240px;
+  background-color: #F3F3F3;
+  /* min-height: calc(100vh - 60px); */
+  overflow-y: auto;
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+  .layout-main {
+    flex-direction: column;
+  }
+/* 
+  .test-sidebar-container {
+    width: 100%;
+    height: auto;
+    position: relative;
+  } */
+
+  .main-layout-content {
+    margin-left: 0;
+    /* padding: 15px; */
+  }
+}
+
+/* Dashboard responsive adjustments */
+@media (max-width: 992px) {
+  .dashboard-content .row {
+    flex-direction: column;
+  }
+
+  .dashboard-content .col-md-4 {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}

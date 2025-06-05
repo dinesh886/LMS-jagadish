@@ -1,0 +1,30 @@
+/* Container for the entire layout */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+}
+
+
+
+/* Main content area (on the right side of the sidebar) */
+.layout-content {
+  flex: 1;
+  padding: 5px;
+  /* overflow-y: auto; */
+  background-color: #fff;
+  box-shadow: inset -2px 0 10px rgba(0, 0, 0, 0.05);
+}
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+  .layout-main {
+    flex-direction: column;
+  }
+
+  .test-sidebar {
+    width: 100%;
+    height: auto;
+  }
+
+  
+}
