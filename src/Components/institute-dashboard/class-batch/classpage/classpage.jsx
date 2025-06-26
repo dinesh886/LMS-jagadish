@@ -17,7 +17,7 @@ import {
 } from "react-icons/fa";
 import { Settings, FilePenLine, Archive,Trash2  } from 'lucide-react';
 import { Link } from "react-router-dom";
-
+import { Helmet } from "react-helmet";
 const ClassPage = () => {
   const data = [
     { id: "1", name: "Class 1", strength: 30, maximumallowed: 50, expiryDate: new Date(2024, 5, 30) },
@@ -146,7 +146,7 @@ const ClassPage = () => {
       selector: "name",
       cell: (row) => (
         <div className="flex items-center">
-          <Link to={`/class/${row.id}/classdetailpage`}>
+          <Link to={`/class/${row.id}/classdetailpage`} state={{ className: row.name, classId: row.id }}>
             <span className="row-link">{row.name}</span>
           </Link>
         </div>
@@ -260,6 +260,10 @@ const ClassPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Classes</title>
+        <meta name="description" content="Classes" />
+      </Helmet>
       <Header />
       <div className="test-index-wrapper">
         <div className="test-index-container">

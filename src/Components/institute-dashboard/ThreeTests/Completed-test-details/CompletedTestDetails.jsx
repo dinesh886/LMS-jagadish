@@ -21,6 +21,7 @@ import { toast } from "react-toastify"
 import Header from "../../../header/header"
 import PaginationButtons from "../../../ReusableComponents/Pagination/PaginationButton"
 import PaginationInfo from "../../../ReusableComponents/Pagination/PaginationInfo"
+import { Helmet } from "react-helmet";
 
 const CompletedTestDetails = () => {
   const navigate = useNavigate()
@@ -306,161 +307,165 @@ const CompletedTestDetails = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Completed Tests Details</title>
+        <meta name="description" content="Scheduld Test - Completed Tests Details" />
+      </Helmet>
       <Header />
       <div className="test-details-container">
-        <div className="top-cards-container completed-top-card ">
-          <div className="top-card">
-            {/* <div className="card-icon">
-              <Clock size={24} />
-            </div> */}
-            <div className="card-content">
-              <h4>Hours Consumed</h4>
-              <strong>{testData.hoursConsumed}</strong>
-            </div>
-          </div>
-          <div className="top-card">
-            {/* <div className="card-icon">
-              <Users size={24} />
-            </div> */}
-            <div className="card-content">
-              <h4>Candidates Attended</h4>
-              <strong>{testData.candidatesAttended}</strong>
-            </div>
-          </div>
-          {/* <div className="top-card">
-            <div className="card-icon">
-              <FileCheck2 size={24} />
-            </div>
-            <div className="card-content">
-              <h3>Average Score</h3>
-              <p>{testData.averageScore}%</p>
-            </div>
-          </div> */}
-        </div>
+       <div className="top-cards-container completed-top-card ">
+                 <div className="top-card">
+                   <div className="card-icon">
+                     <Clock size={24} />
+                   </div>
+                   <div className="card-content">
+                     <h3>Hours Consumed</h3>
+                     <p>{testData.hoursConsumed}</p>
+                   </div>
+                 </div>
+                 <div className="top-card">
+                   <div className="card-icon">
+                     <Users size={24} />
+                   </div>
+                   <div className="card-content">
+                     <h3>Candidates Attended</h3>
+                     <p>{testData.candidatesAttended}</p>
+                   </div>
+                 </div>
+                 {/* <div className="top-card">
+                   <div className="card-icon">
+                     <FileCheck2 size={24} />
+                   </div>
+                   <div className="card-content">
+                     <h3>Average Score</h3>
+                     <p>{testData.averageScore}%</p>
+                   </div>
+                 </div> */}
+               </div>
 
-        <div className="main-card">
-          <h2>Test Details</h2>
-          <div className="test2-info">
-            <div className="info-item">
-              {/* <div className="info-icon">
-                <FileText size={20} />
-              </div> */}
-              <div className="info-content">
-                <h5>Test Name:</h5>
-                <span>{testData.name}</span>
-              </div>
-            </div>
-            <div className="info-item">
-              {/* <div className="info-icon">
-                <User size={20} />
-              </div> */}
-              <div className="info-content">
-                <h5>Owner:</h5>
-                <span>{testData.owner}</span>
-              </div>
-            </div>
-            <div className="info-item">
-              {/* <div className="info-icon">
-                <HelpCircle size={20} />
-              </div> */}
-              <div className="info-content">
-                <h5>Questions:</h5>
-                <span>{testData.questions}</span>
-              </div>
-            </div>
-            <div className="info-item">
-              {/* <div className="info-icon">
-                <Target size={20} />
-              </div> */}
-              <div className="info-content">
-                <h5>Marks:</h5>
-                <span>{testData.marks}</span>
-              </div>
-            </div>
-            <div className="info-item">
-              {/* <div className="info-icon">
-                <BookOpen size={20} />
-              </div> */}
-              <div className="info-content">
-                <h5>Sections:</h5>
-                <span>{testData.sections}</span>
-              </div>
-            </div>
-            <div className="info-item">
-              {/* <div className="info-icon">
-                <FileText size={20} />
-              </div> */}
-              <div className="info-content">
-                <h5>View Question Paper:</h5>
-                <span>{testData.owner}</span>
-              </div>
-            </div>
-            <div className="info-item">
-              {/* <div className="info-icon">
-                <Users2 size={20} />
-              </div> */}
-              <div className="info-content">
-                <h5>Class/Batch:</h5>
-                <span>Class 10</span>
-              </div>
-            </div>
-            <div className="info-item">
-              {/* <div className="info-icon">
-                <Target size={20} />
-              </div> */}
-              <div className="info-content">
-                <h5>Marks:</h5>
-                <span>{testData.marks}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="accordion">
-            <div className="accordion-item">
-              <button
-                className={`accordion-header ${expandedSection === "description" ? "active" : ""}`}
-                onClick={() => toggleSection("description")}
-              >
-                Description
-                <span className="accordion-icon">
-                  {expandedSection === "description" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                </span>
-              </button>
-              {expandedSection === "description" && (
-                <div className="accordion-content">
-                  <p>{testData.description}</p>
+       <div className="main-card">
+                <h2>Test Details</h2>
+                <div className="test2-info">
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <FileText size={20} />
+                    </div>
+                    <div className="info-content">
+                      <strong>Test Name:</strong>
+                      <span>{testData.name}</span>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <User size={20} />
+                    </div>
+                    <div className="info-content">
+                      <strong>Owner:</strong>
+                      <span>{testData.owner}</span>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <HelpCircle size={20} />
+                    </div>
+                    <div className="info-content">
+                      <strong>Questions:</strong>
+                      <span>{testData.questions}</span>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <Target size={20} />
+                    </div>
+                    <div className="info-content">
+                      <strong>Marks:</strong>
+                      <span>{testData.marks}</span>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <BookOpen size={20} />
+                    </div>
+                    <div className="info-content">
+                      <strong>Sections:</strong>
+                      <span>{testData.sections}</span>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <FileText size={20} />
+                    </div>
+                    <div className="info-content">
+                      <strong>View Question Paper:</strong>
+                      <span>{testData.owner}</span>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <Users2 size={20} />
+                    </div>
+                    <div className="info-content">
+                      <strong>Class/Batch:</strong>
+                      <span>Class 10</span>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <div className="info-icon">
+                      <Target size={20} />
+                    </div>
+                    <div className="info-content">
+                      <strong>Marks:</strong>
+                      <span>{testData.marks}</span>
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-            <div className="accordion-item">
-              <button
-                className={`accordion-header ${expandedSection === "instructions" ? "active" : ""}`}
-                onClick={() => toggleSection("instructions")}
-              >
-                Instructions
-                <span className="accordion-icon">
-                  {expandedSection === "instructions" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                </span>
-              </button>
-              {expandedSection === "instructions" && (
-                <div className="accordion-content">
-                  <p>{testData.instructions}</p>
+      
+                <div className="accordion">
+                  <div className="accordion-item">
+                    <button
+                      className={`accordion-header ${expandedSection === "description" ? "active" : ""}`}
+                      onClick={() => toggleSection("description")}
+                    >
+                      Description
+                      <span className="accordion-icon">
+                        {expandedSection === "description" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                      </span>
+                    </button>
+                    {expandedSection === "description" && (
+                      <div className="accordion-content">
+                        <p>{testData.description}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="accordion-item">
+                    <button
+                      className={`accordion-header ${expandedSection === "instructions" ? "active" : ""}`}
+                      onClick={() => toggleSection("instructions")}
+                    >
+                      Instructions
+                      <span className="accordion-icon">
+                        {expandedSection === "instructions" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                      </span>
+                    </button>
+                    {expandedSection === "instructions" && (
+                      <div className="accordion-content">
+                        <p>{testData.instructions}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
+              </div>
+        
+        <div className="candidate-details-card">
+          <div className="status-header">
+            <div className="status-title status-title2">
+              <BarChart2 size={20} className="status-title-icon" />
+              <h3>Student Performance</h3>
             </div>
-          </div>
-        </div>
-        <div className="status-header">
-          <div className="details-table-head">
-            {/* <BarChart2 size={20} className="status-title-icon" /> */}
-            <h3>Student Performance</h3>
-          </div>
-          {/* <div className="status-subtitle status-subtitle2">
+            {/* <div className="status-subtitle status-subtitle2">
               Student Table ({filteredCandidates.length})
             </div> */}
-        </div>
-        <div className="candidate-details-card">
-        
+          </div>
           <DataTable
             columns={columns}
             data={getCurrentPageData()}

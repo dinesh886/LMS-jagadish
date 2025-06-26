@@ -21,7 +21,8 @@
 .layout-main {
   display: flex;
   flex: 1;
-  overflow: hidden;
+  background: #F4F5F6;
+  /* overflow: hidden; */
 }
 
 /* Sidebar styles */
@@ -39,7 +40,7 @@
   flex: 1;
   padding: 15px;
   margin-left: 240px;
-  background-color: #F3F3F3;
+  /* background-color: #F3F3F3; */
   /* min-height: calc(100vh - 60px); */
   overflow-y: auto;
 }

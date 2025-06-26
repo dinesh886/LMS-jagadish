@@ -1,11 +1,13 @@
 /* LaTeX renderer styles with proper inline flow */
 .latex-content {
-
-
+    width: 100%;
+    /* Full width of parent */
     margin: 12px 0;
     padding: 8px 0;
     display: flow-root;
     /* Ensures proper text flow */
+    box-sizing: border-box;
+    /* Ensures padding doesn't exceed width */
 }
 
 .latex-content p {

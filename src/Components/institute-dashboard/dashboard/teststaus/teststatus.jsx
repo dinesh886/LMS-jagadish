@@ -26,7 +26,7 @@ export default function TestStatusBar() {
         <div className="status-header">
           <div className="status-title">
             <BarChart2 size={20} className="status-title-icon" />
-            <h3 className="status-title-head">Usage Overview</h3>
+            <h3 className="status-title-head">Usage </h3>
           </div>
           <div className="status-subtitle">
             Current billing term usage will be reset at <span className='resetat'>23 Apr 2025 10:00 PM</span>
@@ -56,20 +56,20 @@ export default function TestStatusBar() {
         <div className="status-metrics">
           <StatusMetric
             icon={<CheckCircle2 size={18} />}
-            label="Completed"
+            label="Completed:"
             value={`${testHours.completed} Hrs`}
             color="completed"
           />
           <StatusMetric
             icon={<Clock4 size={18} />}
-            label="On Hold"
+            label="On Hold:"
             value={`${testHours.onHold} Hrs`}
             color="on-hold"
           />
           <StatusMetric
             icon={<Zap size={18} />}
-            label="Total Usage"
-            value={`${usedHours}/${totalHours} Hrs`}
+            label="Total Usage:"
+            value={`${usedHours}/${totalHours} `}
             color="total"
           />
         </div>

@@ -71,8 +71,8 @@ body {
 }
 
 .status-writing {
-  color: var(--status-color);
-  font-weight: 600;
+  /* color: var(--status-color); */
+  /* font-weight: 600; */
 }
 
 .timer-section {

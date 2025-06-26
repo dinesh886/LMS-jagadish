@@ -232,6 +232,9 @@ body {
     font-family: 'Noto Sans',
         sans-serif !important;
 }
+body {
+    min-height: 100vh;
+    overflow-y: auto !important ;}
 /* hr{
   color:  #f0f0f0 !important;
 } */
@@ -631,7 +634,7 @@ background-color: #e0e0e0 !important;
     background-color: white;
     box-shadow: 0 4px 12px 0 rgba(30, 37, 48, .12), 0 2px 4px rgba(30, 37, 48, .08);
     border-radius: 4px;
-    padding: 0.5rem;
+   
     z-index: 500;
     width: 217px;
     right: 0;
@@ -676,7 +679,7 @@ background-color: #e0e0e0 !important;
     background-color: var(--primary-main-color);
     color: white !important;
     border: none;
-    border-radius: 5px;
+    /* border-radius: 5px; */
 }
 
 .add-tag-button:hover {
@@ -731,8 +734,8 @@ background-color: #e0e0e0 !important;
 }
 
 input[type="checkbox"] {
-    width: 15px;
-    height: 14px;
+    width: 17px;
+    height: 16px;
     vertical-align: top;
     margin-top: 3px;
     /* tweak as needed based on font-size */
@@ -1168,7 +1171,7 @@ input[type="checkbox"] {
     --index-container-text: #495365;
     --index-container-border-radius: 8px;   
     --index-container-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --index-container-padding: 2rem;
+    --index-container-padding: 1rem;
 
     /* Button & Hover Effects */
     --index-container-hover-bg: rgba(0, 102, 204, 0.1);

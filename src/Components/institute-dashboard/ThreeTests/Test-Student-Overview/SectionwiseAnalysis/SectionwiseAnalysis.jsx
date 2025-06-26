@@ -66,7 +66,7 @@ const SectionwiseAnalysis = () => {
       <div className="SectionwiseAnalysis-card">
         <div className="SectionwiseAnalysis-header">
           <div className="SectionwiseAnalysis-title">
-            {/* <BookOpen size={20} /> */}
+            <BookOpen size={20} />
             <h2>Sectionwise Analysis</h2>
           </div>
           {/* <div className="SectionwiseAnalysis-subtitle">Performance breakdown by subject</div> */}
@@ -82,32 +82,40 @@ const SectionwiseAnalysis = () => {
                     className="SectionwiseAnalysis-section-indicator"
                     style={{ backgroundColor: `${section.color}20` }}
                   >
-                    <svg width="60" height="60" viewBox="0 0 40 40">
-                      <circle cx="20" cy="20" r="18" fill="none" stroke="#e5e7eb" strokeWidth="4" />
+                    <svg width="60" height="60" viewBox="0 0 60 60">
                       <circle
-                        cx="20"
-                        cy="20"
-                        r="18"
+                        cx="30"
+                        cy="30"
+                        r="26"
+                        fill="none"
+                        stroke="#e5e7eb"
+                        strokeWidth="5"
+                      />
+                      <circle
+                        cx="30"
+                        cy="30"
+                        r="26"
                         fill="none"
                         stroke={section.color}
-                        strokeWidth="4"
-                        strokeDasharray={2 * Math.PI * 18}
-                        strokeDashoffset={calculateStrokeDashoffset(section.percentage)}
+                        strokeWidth="5"
+                        strokeDasharray={2 * Math.PI * 26}
+                        strokeDashoffset={calculateStrokeDashoffset(section.percentage, 26)}
                         strokeLinecap="round"
-                        transform="rotate(-90 20 20)"
+                        transform="rotate(-90 30 30)"
                       />
                       <text
-                        x="20"
-                        y="20"
+                        x="30"
+                        y="30"
                         dominantBaseline="middle"
                         textAnchor="middle"
-                        fontSize="10"
+                        fontSize="12"
                         fontWeight="bold"
                         fill={section.color}
                       >
                         {section.percentage}%
                       </text>
                     </svg>
+
                   </div>
                 </div>
                 <div className="SectionwiseAnalysis-section-score">{section.percentage}%</div>
@@ -117,14 +125,12 @@ const SectionwiseAnalysis = () => {
                 <div className="SectionwiseAnalysis-graph-container">
                   <div className="SectionwiseAnalysis-graph">
                     <svg className="SectionwiseAnalysis-curve" viewBox="0 0 200 80" preserveAspectRatio="none">
-                      {/* Distribution curve - updated to match reference style */}
+                      {/* Distribution curve */}
                       <path
-                        d="M20,80 
-       C60,80 80,10 100,10
-       C120,10 140,80 180,80"
+                        d="M 0,80 C 40,80 40,10 100,10 C 160,10 160,80 200,80"
                         fill="none"
                         stroke={section.color}
-                        strokeWidth="3"
+                        strokeWidth="2"
                       />
 
                       {/* Connecting line from marker to curve */}
@@ -133,7 +139,7 @@ const SectionwiseAnalysis = () => {
                         y1={calculateCurveY(section.percentage)}
                         x2={section.percentage * 2}
                         y2="0"
-                        stroke="#e74c3c"
+                        stroke="#ef4444"
                         strokeWidth="2"
                         strokeDasharray="3,3"
                         opacity="0.8"
@@ -144,19 +150,8 @@ const SectionwiseAnalysis = () => {
                         cx={section.percentage * 2}
                         cy={calculateCurveY(section.percentage)}
                         r="4"
-                        fill="#e74c3c"
+                        fill="#ef4444"
                       />
-
-                      {/* "You" text label */}
-                      <text
-                        x={section.percentage * 2}
-                        y={calculateCurveY(section.percentage) - 10}
-                        textAnchor="middle"
-                        fontSize="6"
-                        fill="#e74c3c"
-                      >
-                       
-                      </text>
                     </svg>
                     <div className="SectionwiseAnalysis-marker" style={{ left: `${section.percentage}%` }}>
                       You
@@ -167,21 +162,21 @@ const SectionwiseAnalysis = () => {
                 <div className="SectionwiseAnalysis-stats">
                   <div className="SectionwiseAnalysis-stat-item">
                     <div className="SectionwiseAnalysis-stat-label">
-                      {/* <CheckCircle size={14} /> */}
+                      <CheckCircle size={14} />
                       <span>Correct:</span>
                     </div>
                     <div className="SectionwiseAnalysis-stat-value correct">{section.correct}</div>
                   </div>
                   <div className="SectionwiseAnalysis-stat-item">
                     <div className="SectionwiseAnalysis-stat-label">
-                      {/* <XCircle size={14} /> */}
+                      <XCircle size={14} />
                       <span>Wrong:</span>
                     </div>
                     <div className="SectionwiseAnalysis-stat-value wrong">{section.wrong}</div>
                   </div>
                   <div className="SectionwiseAnalysis-stat-item">
                     <div className="SectionwiseAnalysis-stat-label">
-                      {/* <Award size={14} /> */}
+                      <Award size={14} />
                       <span>Rank:</span>
                     </div>
                     <div className="SectionwiseAnalysis-stat-value rank">{section.rank}</div>
@@ -189,7 +184,7 @@ const SectionwiseAnalysis = () => {
                 </div>
               </div>
 
-              {/* {index < sectionsData.length - 1 && <div className="SectionwiseAnalysis-divider"></div>} */}
+              {index < sectionsData.length - 1 && <div className="SectionwiseAnalysis-divider"></div>}
             </div>
           ))}
         </div>

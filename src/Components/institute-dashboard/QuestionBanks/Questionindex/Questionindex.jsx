@@ -21,6 +21,7 @@ import TopBar from "../../class-batch/classtopbar/classtopbar"
 import { Link } from "react-router-dom"
 import Header from "../../../header/header"
 import { HiDotsVertical } from "react-icons/hi";
+import { Helmet } from "react-helmet";
 const Questionindex = () => {
   // Static rows for the table with IDs
   const data = [
@@ -268,6 +269,10 @@ const Questionindex = () => {
 
   return (
     <>
+      <Helmet>
+        <title> QuestionBanks</title>
+        <meta name="description" content="Question Banks List" />
+      </Helmet>
       <Header />
       <div className="questionbank-index-wrapper">
         <div className="questionbank-index-container">

@@ -18,21 +18,21 @@ const DashBoard = () => {
             title: "Teachers",
             value: "12/20",
             icon: <Users size={24} />,
-            label: "Total",
+            label: "Teachers",
             color: "#3B82F6" // blue
         },
         {
             title: "Students",
             value: "135/500",
             icon: <GraduationCap size={24} />,
-            label: "Total",
+            label: "Students",
             color: "#3B82F6" // emerald
         },
         {
             title: "Question Banks",
             value: "56/100",
             icon: <BookOpen size={24} />,
-            label: "Banks",
+            label: "QB",
             color: "#3B82F6" // amber
         },
         {
@@ -62,7 +62,9 @@ const DashBoard = () => {
         <>
             <Header />
         <section className="dashboard-content">
-          
+          <div>
+                    <h3 className='dashboardheading'>Institute Dashboard</h3>
+          </div>
 
                 <div className="dashboard-stats-grid">
                 {statsData.map((stat, index) => (
@@ -72,8 +74,8 @@ const DashBoard = () => {
                         </div>
                         <div className="stat-content">
                             <p className="stat-title">{stat.title}</p>
-                            <h3 className="dashboard-stat-value">{stat.value}</h3>
-                            <span className="dashboard-stat-label">{stat.label}</span>
+                            <h3 className="dashboard-stat-value">{stat.value} {stat.label}</h3>
+                            {/* <span className="dashboard-stat-label"></span> */}
                         </div>
                     </div>
                 ))}

@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Header from '../../header/header';
 import UnscheduledTest from "../ThreeTests/UnscheduledTest/UnscheduledTest";
+import { Helmet } from "react-helmet";
 
 const UnScheduled = () => {
   const navigate = useNavigate();
@@ -14,11 +15,18 @@ const UnScheduled = () => {
   };
 
   return (
+    <>
+      <Helmet>
+        <title> UnScheduled Tests </title>
+        <meta name="description" content="UnScheduled Tests" />
+      </Helmet>
     <div className="scheduled-container">
+
       <Header />
       <UnscheduledTest onViewDetails={handleViewDetails} />
      
     </div>
+    </>
   );
 };
 

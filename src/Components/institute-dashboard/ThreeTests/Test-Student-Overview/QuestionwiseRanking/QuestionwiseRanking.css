@@ -12,7 +12,7 @@
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --radius: 0.5rem;
+    --radius: 4px;
 }
 
 .QuestionwiseRanking-container {
@@ -41,7 +41,7 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 0.5rem;
+    
 }
 
 .QuestionwiseRanking-title h2 {
@@ -228,18 +228,20 @@
 
 /* Modal styles */
 .QuestionwiseRanking-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 1rem;
-}
+ 
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: var(--modal-overlay-bottom);
+            left: var(--modal-overlay-left);
+            display: var(--modal-overlay-display);
+            align-items: var(--align-items);
+            justify-content: var(--modal-overlay-justify-content);
+            background: var(--modal-overlay-background);
+            overflow-y: var(--modal-overlay-overflow-y);
+            padding-top: var(--modal-overlay-padding-top);
+            z-index: 999;   }
+
 
 .QuestionwiseRanking-modal {
     background-color: var(--card-bg);

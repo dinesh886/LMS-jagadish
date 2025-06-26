@@ -105,7 +105,13 @@ const CurrentRunningTest = ({ onViewDetails }) => {
     {
       name: "Test Date",
       selector: "endTime",
-      cell: (row) => new Date(row.endTime).toLocaleDateString(),
+      cell: (row) => {
+        const date = new Date(row.endTime);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`; // formatted as DD-MM-YYYY
+      },
       sortable: true,
     },
     {
@@ -136,14 +142,14 @@ const CurrentRunningTest = ({ onViewDetails }) => {
 
   return (
     <>
-    <div className="status-header">
-    <div className="status-title status-title2 ongoingtesthead">
-      {/* <FileClock size={20} className="status-title-icon" /> */}
-      <h3>Ongoing Tests</h3>
-    </div>
-  </div>
+  
     <div className="current-running-test">
-     
+        <div className="status-header">
+          <div className="status-title status-title2">
+            <FileClock size={20} className="status-title-icon" />
+            <h3>Ongoing Tests</h3>
+          </div>
+        </div>
       <DataTable
         columns={columns}
         data={currentTests}

@@ -28,11 +28,13 @@ import Header from "../../../header/header"
 import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 import PaginationButtons from "../../../ReusableComponents/Pagination/PaginationButton";
 import PaginationInfo from "../../../ReusableComponents/Pagination/PaginationInfo";
+import { Helmet } from "react-helmet";
 
 const CurrentRunningTestDetails = () => {
   const [expandedSection, setExpandedSection] = useState(null)
   const [openDropdown, setOpenDropdown] = useState(null)
   const [suspendedStates, setSuspendedStates] = useState({});
+  const [terminatedStates, setTerminatedStates] = useState({});
   const [hoveredScoreKey, setHoveredScoreKey] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const searchPlaceholder = "Search students...";
@@ -62,21 +64,21 @@ const CurrentRunningTestDetails = () => {
       leaveTime: "3",
       status: "Running",
     },
-    {
-      id: 2,
-      name: "student2",
-      email: "student2@example.com",
-      class: "Invited",
-      rank: 2,
-      a: 42,
-      c: 38,
-      w: 3,
-      gs: 85,
-      ns: 80,
-      joinTime: "2",
-      leaveTime: "3",
-      status: "Submitted",
-    },
+    // {
+    //   id: 2,
+    //   name: "student2",
+    //   email: "student2@example.com",
+    //   class: "Invited",
+    //   rank: 2,
+    //   a: 42,
+    //   c: 38,
+    //   w: 3,
+    //   gs: 85,
+    //   ns: 80,
+    //   joinTime: "2",
+    //   leaveTime: "3",
+    //   status: "Submitted",
+    // },
     {
       id: 3,
       name: "student3",
@@ -107,15 +109,14 @@ const CurrentRunningTestDetails = () => {
       leaveTime: "5",
       status: "Logout",
     },
-    // Added more candidates to demonstrate pagination
     {
       id: 5, name: "student5", email: "student5@example.com", class: "Enrolled 10-C", rank: 5,
       a: 35, c: 30, w: 5, gs: 75, ns: 70, joinTime: "4", leaveTime: "2", status: "Running"
     },
-    {
-      id: 6, name: "student6", email: "student6@example.com", class: "Guest", rank: 6,
-      a: 40, c: 35, w: 5, gs: 80, ns: 75, joinTime: "3", leaveTime: "4", status: "Submitted"
-    },
+    // {
+    //   id: 6, name: "student6", email: "student6@example.com", class: "Guest", rank: 6,
+    //   a: 40, c: 35, w: 5, gs: 80, ns: 75, joinTime: "3", leaveTime: "4", status: "Submitted"
+    // },
     {
       id: 7, name: "student7", email: "student7@example.com", class: "Enrolled 10-D", rank: 7,
       a: 28, c: 25, w: 3, gs: 65, ns: 60, joinTime: "2", leaveTime: "1", status: "Absent"
@@ -169,12 +170,13 @@ const CurrentRunningTestDetails = () => {
     }
   };
 
-  // Full view toggle (consistent with CompletedTestDetails)
+  // Full view toggle
   const toggleFullView = () => {
     if (!fullViewMode) {
       setRowsPerPage(filteredCandidates.length);
     } else {
-      setRowsPerPage(3);
+      setRowsPerPage(5);
+      setCurrentPage(1);
     }
     setFullViewMode(!fullViewMode);
   };
@@ -218,12 +220,6 @@ const CurrentRunningTestDetails = () => {
     setExpandedSection(expandedSection === section ? null : section)
   }
 
-  const handleSuspendResume = (row) => {
-    const action = row.status === "Running" ? "suspended" : "resumed"
-    toast.success(`Candidate ${row.name} has been ${action} `)
-    setOpenDropdown(null)
-  }
-
   const handleSuspendToggle = (row) => {
     const updatedStates = {
       ...suspendedStates,
@@ -240,19 +236,49 @@ const CurrentRunningTestDetails = () => {
     setOpenDropdown(null);
   };
 
-  const handleBulkSuspend = (selectedRows) => {
+  const handleTerminate = (row) => {
+    const updatedTerminatedStates = {
+      ...terminatedStates,
+      [row.id]: true,
+    };
+    const updatedSuspendedStates = {
+      ...suspendedStates,
+      [row.id]: false, // Unsuspend when terminating
+    };
+
+    setTerminatedStates(updatedTerminatedStates);
+    setSuspendedStates(updatedSuspendedStates);
+
+    toast.error(`${row.name} has been terminated`);
+    setOpenDropdown(null);
+  };
+
+  const handleBulkSuspend = (selectedRows, isSuspending) => {
     const updatedStates = { ...suspendedStates };
     selectedRows.forEach(row => {
-      updatedStates[row.id] = true;
+      updatedStates[row.id] = isSuspending;
     });
     setSuspendedStates(updatedStates);
 
-    const names = selectedRows.map(row => row.name).join(', ');
-    toast.error(`Suspended ${selectedRows.length} students: ${names}`);
+    const names = selectedRows.map(row => sampleCandidates.find(c => c.id === row.id)?.name).join(', ');
+    toast.error(isSuspending
+      ? `Suspended ${selectedRows.length} students: ${names}`
+      : `Resumed ${selectedRows.length} students: ${names}`);
   };
 
   const handleBulkTerminate = (selectedRows) => {
-    const names = selectedRows.map(row => row.name).join(', ');
+    const updatedTerminatedStates = { ...terminatedStates };
+    const updatedSuspendedStates = { ...suspendedStates };
+
+    selectedRows.forEach(row => {
+      updatedTerminatedStates[row.id] = true;
+      updatedSuspendedStates[row.id] = false; // Unsuspend when terminating
+    });
+
+    setTerminatedStates(updatedTerminatedStates);
+    setSuspendedStates(updatedSuspendedStates);
+
+    const names = selectedRows.map(row => sampleCandidates.find(c => c.id === row.id)?.name).join(', ');
     toast.error(`Terminated ${selectedRows.length} students: ${names}`);
   };
 
@@ -260,12 +286,6 @@ const CurrentRunningTestDetails = () => {
     const names = selectedRows.map(row => row.name).join(', ');
     toast.info(`Notification sent to ${selectedRows.length} students: ${names}`);
   };
-
-  const handleTerminate = (row) => {
-    toast.info(`${row.name} has been terminated`)
-    setOpenDropdown(null)
-  }
-
   const handleSendNotification = (row) => {
     toast.info(`Notification sent to ${row.name} `)
     setOpenDropdown(null)
@@ -365,99 +385,168 @@ const CurrentRunningTestDetails = () => {
     {
       name: "Status",
       selector: "status",
-      cell: (row) => <span className={`status  ${row.status?.toLowerCase() || "na"} `}>{row.status || "N/A"}</span>,
+      cell: (row) => {
+        let displayStatus = row.status;
+        if (terminatedStates[row.id]) {
+          displayStatus = "Terminated";
+        } else if (suspendedStates[row.id]) {
+          displayStatus = "Suspended";
+        }
+        return <span className={`status ${displayStatus?.toLowerCase() || "na"}`}>{displayStatus || "N/A"}</span>;
+      },
       sortable: true,
-    },
+  },
+    
     {
       name: "Options",
-      cell: (row) => (
-        <div className="options-dropdown-container"
-          ref={openDropdown === row.id ? dropdownRef : null}
-        >
-          <button
-            className="options-dropdown-toggle"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDropdownToggle(row.id);
-            }}
+      cell: (row) => {
+        const isTerminated = terminatedStates[row.id];
+        const isSuspended = suspendedStates[row.id];
+        const isSubmitted = row.status === "Submitted";
+
+        const isDisabled = isTerminated || isSubmitted; // For disabling inner options only
+
+        return (
+          <div
+            className="options-dropdown-container"
+            ref={openDropdown === row.id ? dropdownRef : null}
           >
-            <MoreVertical size={16} />
-          </button>
-          {openDropdown === row.id && (
-            <div className="options-dropdown-menu">
-              <div
-                className={`options-status-toggle ${suspendedStates[row.id] ? "disabled" : "enabled"}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSuspendToggle(row);
-                }}
-              >
-                <button className="options-dropdown-item">
-                  <MonitorX size={14} />
-                  {suspendedStates[row.id] ? "Resume" : "Suspend"}
-                  <div className="options-status-toggle-track">
-                    <div
-                      className={`options-status-toggle-thumb ${suspendedStates[row.id] ? "disabled" : "enabled"}`}
-                    >
-                      {!suspendedStates[row.id] ? (
-                        <IoMdCheckmark className="status-icon" />
-                      ) : (
-                        <IoMdClose className="status-icon" />
-                      )}
+            <button
+              className="options-dropdown-toggle"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDropdownToggle(row.id);
+              }}
+            // dropdown toggle button always enabled
+            >
+              <MoreVertical size={16} />
+            </button>
+
+            {/* Show dropdown if open */}
+            {openDropdown === row.id && (
+              <div className="options-dropdown-menu">
+                {/* Suspend / Resume Option */}
+                <div
+                  className={`options-status-toggle ${isSuspended ? "disabled" : "enabled"} ${isDisabled ? "disabled" : ""}`}
+                  onClick={(e) => {
+                    if (isDisabled) return;
+                    e.stopPropagation();
+                    handleSuspendToggle(row);
+                  }}
+                >
+                  <button className="options-dropdown-item" disabled={isDisabled}>
+                    <MonitorX size={14} />
+                    {isSuspended ? "Resume" : "Suspend"}
+                    <div className={`options-status-toggle-track ${isDisabled ? "disabled" : ""}`}>
+                      <div className={`options-status-toggle-thumb`}>
+                        {isSuspended ? (
+                          <IoMdClose className="status-icon" />
+                        ) : (
+                          <IoMdCheckmark className="status-icon" />
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  </button>
+                </div>
+
+                {/* Terminate Option */}
+                <button
+                  className="options-dropdown-item"
+                  onClick={(e) => {
+                    if (isDisabled) return;
+                    e.stopPropagation();
+                    handleTerminate(row);
+                  }}
+                  disabled={isDisabled}
+                >
+                  <Power size={14} />
+                  Terminate
+                </button>
+
+                {/* Send Notification Option */}
+                <button
+                  className="options-dropdown-item options-dropdown-item3"
+                  onClick={(e) => {
+                    if (isDisabled) return;
+                    e.stopPropagation();
+                    handleSendNotification(row);
+                  }}
+                  disabled={isDisabled}
+                >
+                  <Forward size={14} />
+                  Send Notification
                 </button>
               </div>
-              <button
-                className="options-dropdown-item"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleTerminate(row);
-                }}
-              >
-                <Power size={14} /> Terminate
-              </button>
-              <button
-                className="options-dropdown-item options-dropdown-item3"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSendNotification(row);
-                }}
-              >
-                <Forward size={14} />
-                Send Notification
-              </button>
-            </div>
-          )}
-        </div>
-      ),
+            )}
+          </div>
+        );
+      },
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
     }
+    
+    
+    
+    
+    
+    
+    
   ];
 
+  const customRowStyles = (row) => {
+    if (terminatedStates[row.id]) {
+      return {
+        backgroundColor: 'rgba(255, 0, 0, 0.1)', // Light red for terminated
+        '&:hover': {
+          backgroundColor: 'rgba(255, 0, 0, 0.15) !important'
+        }
+      };
+    }
+    if (suspendedStates[row.id]) {
+      return {
+        backgroundColor: 'rgba(255, 165, 0, 0.1)', // Light orange for suspended
+        '&:hover': {
+          backgroundColor: 'rgba(255, 165, 0, 0.15) !important'
+        }
+      };
+    }
+    return {};
+  };
   return (
     <>
+      <Helmet>
+        <title>Current Running Test Details</title>
+        <meta name="description" content="Scheduld Ongoing Tests" />
+      </Helmet>
       <Header />
       <div className="test-details-container">
         <div className="top-cards-container">
           <div className="top-card">
+            <div className="card-icon">
+              <Clock size={24} />
+            </div>
             <div className="card-content">
-              <h4>Hours Consumed</h4>
-              <strong>{testData.hoursConsumed}</strong>
+              <h3>Hours Consumed</h3>
+              <p>{testData.hoursConsumed}</p>
             </div>
           </div>
           <div className="top-card">
+            <div className="card-icon">
+              <Users size={24} />
+            </div>
             <div className="card-content">
-              <h4>Candidates Attended</h4>
-              <strong>{testData.candidatesAttended}</strong>
+              <h3>Candidates Attended</h3>
+              <p>{testData.candidatesAttended}</p>
             </div>
           </div>
           <div className="top-card">
+            <div className="card-icon">
+              <Timer size={24} />
+            </div>
             <div className="card-content">
-              <h4>Timer </h4>
-              <strong className="time-remaining">{testData.timerDuration}</strong>
+              <h3>Timer </h3>
+              <p className="time-remaining">{testData.timerDuration}</p>
             </div>
           </div>
         </div>
@@ -466,50 +555,74 @@ const CurrentRunningTestDetails = () => {
           <h2>Test Details</h2>
           <div className="test2-info">
             <div className="info-item">
+              <div className="info-icon">
+                <FileText size={20} />
+              </div>
               <div className="info-content">
-                <h5>Test Name:</h5>
+                <strong>Test Name:</strong>
                 <span>{testData.name}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <User size={20} />
+              </div>
               <div className="info-content">
-                <h5>Owner:</h5>
+                <strong>Owner:</strong>
                 <span>{testData.owner}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <HelpCircle size={20} />
+              </div>
               <div className="info-content">
-                <h5>Questions:</h5>
+                <strong>Questions:</strong>
                 <span>{testData.questions}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <Target size={20} />
+              </div>
               <div className="info-content">
-                <h5>Marks:</h5>
+                <strong>Marks:</strong>
                 <span>{testData.marks}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <BookOpen size={20} />
+              </div>
               <div className="info-content">
-                <h5>Sections</h5>
+                <strong>Sections:</strong>
                 <span>{testData.sections}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <FileText size={20} />
+              </div>
               <div className="info-content">
-                <h5>View Question Paper</h5>
+                <strong>View Question Paper:</strong>
                 <span>{testData.owner}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <Users2 size={20} />
+              </div>
               <div className="info-content">
-                <h5>Class/Batch</h5>
+                <strong>Class/Batch:</strong>
                 <span>{testData.classbatch}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <Target size={20} />
+              </div>
               <div className="info-content">
-                <h5>Marks:</h5>
+                <strong>Marks:</strong>
                 <span>{testData.marks}</span>
               </div>
             </div>
@@ -550,33 +663,42 @@ const CurrentRunningTestDetails = () => {
             </div>
           </div>
         </div>
-        <div className="status-header">
-          <div className="details-table-head">
-            <h3>Student Performance <br></br>Student table</h3>
-          </div>
-        </div>
+
         <div className="candidate-details-card">
+          <div className="status-header">
+            <div className="status-title status-title2">
+              <BarChart2 size={20} className="status-title-icon" />
+              <h3>Student Performance</h3>
+            </div>
+          </div>
           <DataTable
             columns={columns}
-            data={getCurrentPageData()}
-            pagination={false}
+            data={getCurrentPageData()} // Use getCurrentPageData() here
+            pagination
+            paginationPerPage={rowsPerPage}
+            paginationRowsPerPageOptions={[5, 10, 15, 20]}
+            paginationTotalRows={filteredCandidates.length}
+            onChangePage={(page) => setCurrentPage(page)}
+            searchPlaceholder={searchPlaceholder}
+            onChangeRowsPerPage={(currentRowsPerPage, currentPage) => {
+              setRowsPerPage(currentRowsPerPage);
+              setCurrentPage(currentPage);
+            }}
             highlightOnHover
+            customStyles={{
+              rows: {
+                style: (row) => customRowStyles(row)
+              }
+            }}
             studentActions={["suspend", "terminate", "sendMessage"]}
             onBulkSuspend={handleBulkSuspend}
             onBulkTerminate={handleBulkTerminate}
             onBulkSendMessage={handleBulkSendMessage}
-            searchoption={false}
+            searchoption={true}
             searchQuery={searchQuery}
-            searchPlaceholder={searchPlaceholder}
+            allStudents={sampleCandidates} // Add this line
             onSearchChange={handleSearchChange}
-            enableToggle={false}
-            fullViewMode={fullViewMode}
-            onToggleFullView={toggleFullView}
-            allRowsExpanded={allRowsExpanded}
-            expandedRows={expandedRows}
-            setExpandedRows={setExpandedRows}
           />
-
           <div className="score-legend">
             <p>Score Legend:</p>
             <ul>

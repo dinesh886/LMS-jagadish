@@ -3,12 +3,12 @@
 import { useState } from "react"
 import "./QuestionwiseRanking.css"
 import { Clock, CheckCircle, XCircle, HelpCircle, X, ScanSearch , ChevronLeft, ChevronRight, Eye } from "lucide-react"
-
+import useBounceModal from "../../../../ReusableComponents/useBounceModal/useBounceModal" // Make s
 const QuestionwiseRanking = () => {
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-
+  const { modalRef, isBouncing } = useBounceModal(isModalOpen)
   // Sample question details for modal
   const questionDetails = [
     {
@@ -209,7 +209,7 @@ const QuestionwiseRanking = () => {
       <div className="QuestionwiseRanking-card">
         <div className="QuestionwiseRanking-header">
           <div className="QuestionwiseRanking-title">
-            {/* <HelpCircle size={20} /> */}
+            <HelpCircle size={20} />
             <h2>Question-wise Ranking</h2>
           </div>
           {/* <div className="QuestionwiseRanking-subtitle">Analysis of responses for each question</div> */}
@@ -351,8 +351,10 @@ const QuestionwiseRanking = () => {
 
         {/* Question Preview Modal */}
         {isModalOpen && (
-          <div className="QuestionwiseRanking-modal-overlay" onClick={closeModal}>
-            <div className="QuestionwiseRanking-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="QuestionwiseRanking-modal-overlay" >
+            <div
+              ref={modalRef} className={`QuestionwiseRanking-modal mcq-modal-content ${isBouncing ? "bounce" : ""}`}
+            >
               <div className="QuestionwiseRanking-modal-header">
                 <div className="QuestionwiseRanking-modal-title">
                   <ScanSearch size={20} />

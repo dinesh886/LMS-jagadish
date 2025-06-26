@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { NavLink } from "react-router-dom"
+import { NavLink, useLocation } from "react-router-dom"
 import { LayoutDashboard, BookOpen, Database, GraduationCap, Users, CircleUser } from 'lucide-react'
 import "./header.css"
 
@@ -17,6 +17,7 @@ const Header = () => {
   const [isSettingsExpanded, setIsSettingsExpanded] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const dropdownRef = useRef(null)
+  const location = useLocation()
 
   // Check if screen is mobile size
   useEffect(() => {
@@ -52,47 +53,43 @@ const Header = () => {
     <header className="top-bar">
       <div className="top-bar-container">
         <nav className="nav-menu">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.href}
-              to={item.href}
-              className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-            >
-              <item.icon className="nav-icon" />
-              <span className="nav-text">{item.name}</span>
-            </NavLink>
-          ))}
+          {navItems.map((item) => {
+            const isDashboard = item.href === "/"
+            const isActiveDashboard = isDashboard && (
+              location.pathname === "/" ||
+              location.pathname.startsWith("/maindashboard") ||
+              location.pathname === "/subscription"
+            )
+
+            return (
+              <NavLink
+                key={item.href}
+                to={item.href}
+                className={({ isActive }) => `nav-item ${isActive || isActiveDashboard ? "active" : ""}`}
+              >
+                <item.icon className="nav-icon" />
+                <span className="nav-text">{item.name}</span>
+              </NavLink>
+            )
+          })}
         </nav>
 
         <div className="header-right2" ref={dropdownRef}>
           <button className="header-settings-button" onClick={toggleDropdown} aria-label="User menu">
             <CircleUser className="header-profile-icon" />
+            <p className="admin-label">Admin</p>
           </button>
+
 
           {isSettingsExpanded && (
             <div className={`settings-dropdown ${isMobile ? "mobile" : ""}`}>
-              <a href="/profile" className="header-dropdown-item">
-                My Profile
-              </a>
-              <a href="/account" className="header-dropdown-item">
-                Account Settings
-              </a>
-              <a href="/dashboard" className="header-dropdown-item">
-                Dashboard
-              </a>
-              <a href="/courses" className="header-dropdown-item">
-                My Courses
-              </a>
-              {/* <a href="/grades" className="header-dropdown-item">
-                Grades & Certificates
-              </a> */}
+              <a href="/profile" className="header-dropdown-item">My Profile</a>
+              <a href="/account" className="header-dropdown-item">Account Settings</a>
+              <a href="/dashboard" className="header-dropdown-item">Dashboard</a>
+              <a href="/courses" className="header-dropdown-item">My Courses</a>
               <div className="divider2"></div>
-              <a href="/help" className="header-dropdown-item">
-                Help Center
-              </a>
-              <a href="/logout" className="header-dropdown-item logout">
-                Logout
-              </a>
+              <a href="/help" className="header-dropdown-item">Help Center</a>
+              <a href="/logout" className="header-dropdown-item logout">Logout</a>
             </div>
           )}
         </div>

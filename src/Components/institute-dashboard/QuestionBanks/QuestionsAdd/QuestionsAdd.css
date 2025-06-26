@@ -1,238 +1,212 @@
-
-
-
-
-.test-index-header {
-  display: flex;
-  justify-content: space-between;
-  /* Pushes the dropdown to the right */
-  align-items: center;
-  padding: 10px;
-  /* border-bottom: 1px solid #ddd; */
+ * {
+  text-decoration: none;
 }
 
-.columnvisibility-wrapper {
-  margin-left: auto;
-  /* Ensures it aligns to the right */
+a {
+  text-decoration: none;
 }
 
 /* Index Container */
 .questionsadd-index-container {
-  margin-top: var(--allindex-margin-top);
+  margin-top: 1rem;
   background-color: var(--index-container-bg);
   border-radius: var(--index-container-border-radius);
   box-shadow: var(--index-container-box-shadow);
   padding: var(--index-container-padding);
   position: relative;
-  /* overflow: auto; */
+  overflow-x: auto;
 }
-/* NEW MOBILE DROPDOWN STYLES */
 
-/* Mobile Actions Dropdown Container */
-.mobile-actions-dropdown {
-  position: relative;
+/* Header */
+.test-index-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+/* Column Visibility Wrapper */
+.columnvisibility-wrapper {
+  margin-left: auto;
+}
+
+/* Truncate Styling */
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
   display: inline-block;
 }
 
-/* Mobile Menu Trigger Button */
-.mobile-menu-trigger {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  font-size: 16px;
-  color: #6b7280;
-  border-radius: 50%;
-  transition: background-color 0.2s ease, color 0.2s ease;
+.full-view .truncate,
+.expanded-row .truncate {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  max-width: none;
 }
 
-.mobile-menu-trigger:hover {
-  background-color: #f3f4f6;
-  color: #374151;
-}
-
-/* Mobile Actions Menu */
-.mobile-actions-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  z-index: 1000;
-  min-width: 180px;
-  overflow: hidden;
-  animation: slideDown 0.2s ease-out;
-}
-
-/* Mobile Action Item */
-.mobile-action-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 12px 16px;
-  border: none;
-  background: none;
-  text-align: left;
-  cursor: pointer;
-  font-size: 14px;
-  color: #374151;
-  transition: background-color 0.2s ease;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.mobile-action-item:last-child {
-  border-bottom: none;
-}
-
-.mobile-action-item:hover {
-  background-color: #f9fafb;
-}
-
-/* Color-specific styles for mobile actions */
-.mobile-action-item.dispatch:hover {
-  background-color: #eff6ff;
-  color: #2563eb;
-}
-
-.mobile-action-item.copy:hover {
-  background-color: #f0fdf4;
-  color: #16a34a;
-}
-
-.mobile-action-item.pdf:hover {
-  background-color: #fef2f2;
-  color: #dc2626;
-}
-
-.mobile-action-item.share:hover {
-  background-color: #f0f9ff;
-  color: #0284c7;
-}
-
-.mobile-action-item.archive:hover {
-  background-color: #fffbeb;
-  color: #d97706;
-}
-
-.mobile-action-item.delete:hover {
-  background-color: #fef2f2;
-  color: #dc2626;
-}
-
-/* Mobile Action Item Icon */
-.mobile-action-item svg {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
-
-/* Mobile Action Item Text */
-.mobile-action-item span {
+/* Enhanced Type Badge Styling */
+.type-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
   font-weight: 500;
+  text-transform: uppercase;
+  white-space: nowrap;
+
 }
 
-/* Animation for dropdown */
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.type-badge.mcq {
+  background: #e3f2fd;
+ 
 }
 
-/* Responsive behavior - hide desktop buttons on mobile */
-@media (max-width: 768px) {
-  .test-action-buttons .flex.gap-2 {
-    display: none;
-  }
-
-  .mobile-actions-dropdown {
-    display: block;
-  }
+.type-badge.truefalse {
+  background: #e8f5e8;
+ 
 }
 
-/* Show desktop buttons on larger screens */
-@media (min-width: 769px) {
-  .mobile-actions-dropdown {
-    display: none;
-  }
+.type-badge.paragraph {
+  background: #fff3e0;
 
-  .test-action-buttons .flex.gap-2 {
-    display: flex;
-  }
 }
 
-/* Ensure proper positioning in table cells */
-.test-action-buttons {
-  position: relative;
+.type-badge.numerical {
+  background: #f3e5f5;
+ 
+}
+
+.type-badge.table {
+  background: #ffebee;
+ 
+}
+
+.type-badge.programming {
+  background: #f0f4f8;
+
+}
+
+/* Marks Display */
+.marks-display {
+  font-weight: 600;
+
+
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  min-width: 30px;
+  text-align: center;
+}
+
+/* LaTeX Content Styling */
+.row-link .katex {
+  font-size: 14px;
+
+}
+
+.row-link .katex-display {
+  margin: 0.5em 0;
+ 
+}
+
+.truncate .katex-display {
+  display: inline;
+  margin: 0;
+
+}
+
+/* Expanded Content Styling */
+.expanded-content {
+  padding: 0 33px;
+  border-radius: 8px;
+}
+
+.expanded-content h4 {
+
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.mcq-options {
+  margin-top: 15px;
+}
+
+.options {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  justify-content: start;
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100% !important;
 }
 
-/* Prevent dropdown from being cut off */
-.custom-data-table {
-  overflow: visible;
+.mcq-options .option {
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 6px;
+  background: white;
+  transition: all 0.2s ease;
+
 }
 
-.custom-data-table td {
-  overflow: visible;
+.mcq-options .option.correct {
+  background: #e8f5e8;
+  border-color: #4caf50;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1);
+ 
 }
 
-/* Additional mobile optimizations */
-@media (max-width: 480px) {
-  .mobile-actions-menu {
-    min-width: 160px;
-    right: -10px;
-  }
-
-  .mobile-action-item {
-    padding: 10px 14px;
-    font-size: 13px;
-  }
-
-  .mobile-action-item svg {
-    width: 14px;
-    height: 14px;
-  }
+.mcq-options .option .katex {
+  font-size: 14px;
+ 
 }
 
-
-
-
-/* Add these styles to your existing QuestionsAdd.css file */
-
-/* Image handling in questions */
-.row-link img {
+/* Image Handling */
+.row-link img,
+.question-detail-modal img,
+.mcq-option img {
   max-width: 100%;
   height: auto;
-  margin: 12px 0;
+  margin: 12px 0 0 0;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: block;
 }
 
-/* Modal styling for images */
+/* Image Error Handling */
+.image-error {
+ 
+  font-style: italic;
+  padding: 16px;
+  background: #f7fafc;
+  border-radius: 8px;
+  display: block;
+  margin: 12px 0 0 0;
+  border: 2px dashed #cbd5e0;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Modal Styling */
 .question-detail-modal {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 24px;
- 
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 20px;
 }
 
 .question-detail-modal h3 {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 20px;
-  color: #1a202c;
+  
   border-bottom: 2px solid #e2e8f0;
   padding-bottom: 8px;
 }
@@ -243,32 +217,34 @@
   background-color: #f8f9fa;
   border-radius: 8px;
   border-left: 4px solid #4299e1;
+
 }
 
 .mcq-options-modal {
-  margin-bottom: 24px;
+  margin: 20px 0;
 }
 
 .mcq-options-modal h4 {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: #2d3748;
+
 }
 
 .mcq-option {
-  padding: 16px;
-  margin-bottom: 12px;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #e0e0e0;
   border-radius: 6px;
-  border: 1px solid #e2e8f0;
-  background-color: #ffffff;
-  transition: all 0.2s ease;
+  background: white;
+  
 }
 
 .mcq-option.correct-answer {
-  background-color: #f0fff4;
-  border-color: #9ae6b4;
-  box-shadow: 0 2px 8px rgba(72, 187, 120, 0.15);
+  background: #e8f5e8;
+  border-color: #4caf50;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1);
+ 
 }
 
 .mcq-option:hover {
@@ -281,13 +257,14 @@
   border-radius: 8px;
   border-left: 4px solid #38a169;
   margin-bottom: 20px;
+  color: #2563eb;
 } */
 
 .answer-content h4 {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 12px;
-  color: #2d3748;
+ 
 }
 
 .modal-footer {
@@ -312,62 +289,163 @@
   background-color: #3182ce;
 }
 
-.question-detail-modal img {
-  max-width: 100%;
-  height: auto;
-  margin: 12px 0;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: block;
+/* Code Block Styling */
+.row-link pre {
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  overflow-x: auto;
+ 
 }
 
-.mcq-option img {
-  max-width: 100%;
-  height: auto;
-  margin: 12px 0;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: block;
+/* Action Buttons */
+.test-action-buttons {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-/* Image error handling */
-.image-error {
-  color: #718096;
-  font-style: italic;
-  padding: 16px;
-  background: #f7fafc;
-  border-radius: 8px;
-  display: block;
-  margin: 12px 0;
-  border: 2px dashed #cbd5e0;
-  text-align: center;
-  font-size: 14px;
+
+
+.mobile-actions {
+  display: none;
 }
 
-/* Mobile responsive adjustments */
+/* Mobile Responsive */
 @media (max-width: 768px) {
+  .desktop-actions {
+    display: none;
+  }
+
+  .mobile-actions {
+    display: block;
+  }
+ 
+
+  .row-link .katex {
+    font-size: 12px;
+   
+  }
+
+  .truncate {
+    max-width: 300px;
+    /* Reduced for mobile to fit screen */
+  }
+
+  .row-link {
+    white-space: nowrap;
+    /* Ensure single-line for non-expanded */
+    overflow: hidden;
+  }
+
+  .latex-content {
+    overflow: visible;
+    /* Ensure LaTeX content is visible when expanded */
+  }
+
+  .expanded-content {
+    padding: 15px;
+  }
+
+  .mcq-options .option {
+    padding: 8px;
+    font-size: 14px;
+
+  }
+
   .question-detail-modal {
-    padding: 16px;
-  }
-
-  .question-content,
-  .answer-content {
-    padding: 12px;
-  }
-
-  .mcq-option {
-    padding: 12px;
+    padding: 15px;
+    max-height: 90vh;
   }
 
   .row-link img,
   .question-detail-modal img,
   .mcq-option img {
-    margin: 8px 0;
+    max-width: 90%;
+    margin: 8px 0 0 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
+
+  .image-error {
+    margin: 8px 0 0 0;
+  }
+
+  .data-table {
+    font-size: 12px;
+    margin: 8px 0 0 0;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 6px;
+  }
 }
-.latex-content{
-width: 900px;
+
+/* Animation for Expanded Rows */
+.expanded-row {
+  animation: slideDown 0.3s ease-out;
 }
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Language-Specific Styling */
+.telugu-text {
+  font-family: "Noto Sans Telugu", sans-serif;
+ 
+}
+
+.hindi-text {
+  font-family: "Noto Sans Devanagari", sans-serif;
+
+}
+
+.urdu-text {
+  font-family: "Noto Nastaliq Urdu", sans-serif;
+  direction: rtl;
+
+}
+
+/* LaTeX Content */
+.latex-content {
+  width: 100%;
+  display: flow-root;
+  box-sizing: border-box;
+
+}
+
+/* Table Styling */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 0 0;
+}
+
+.data-table th,
+.data-table td {
+  border: 1px solid #e2e8f0;
+  padding: 8px;
+  text-align: left;
+ 
+}
+
+.data-table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.data-table td {
+  background-color: white;
+}
+

@@ -130,9 +130,16 @@ const UpcomingTest = ({ onViewDetails }) => {
     {
       name: "Test Date",
       selector: "startTime",
-      cell: (row) => new Date(row.startTime).toLocaleDateString(),
+      cell: (row) => {
+        const date = new Date(row.startTime);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+      },
       sortable: true,
     },
+    
     {
       name: "Duration",
       selector: "hoursAllotted",
@@ -156,15 +163,15 @@ const UpcomingTest = ({ onViewDetails }) => {
 
   return (
     <>
-    <div className="status-header">
-    <div className="status-title status-title2">
-      {/* <CalendarClock size={20} className="status-title-icon" /> */}
-      <h3>Upcoming Tests</h3>
-    </div>
-  </div>
+   
     <div className="upcoming-test">
      
-
+        <div className="status-header">
+          <div className="status-title status-title2">
+            <CalendarClock size={20} className="status-title-icon" />
+            <h3>Upcoming Tests</h3>
+          </div>
+        </div>
       <DataTable
         columns={columns}
         data={upcomingTests}

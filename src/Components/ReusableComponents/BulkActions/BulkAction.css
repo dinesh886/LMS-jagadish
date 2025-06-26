@@ -1,3 +1,56 @@
+
+.test-bulk-actions-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.test-bulk-actions {
+    display: flex;
+    align-items: center;
+    border: 1px solid;
+    border-radius: 30px;
+    /* overflow: hidden; */
+}
+.test-bulk-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.test-bulk-button:first-child .test-action-button {
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+.test-action-button {
+    background-color: transparent;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 0;
+    font-size: 14px;
+    color: #1e293b;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+    z-index: 1;
+    color: var(--primary-main-color);
+}
+.test-divider {
+    width: 1px;
+    height: 100%;
+    background-color: #000;
+    /* margin: 0 8px; */
+}
+
+
+
+
+
+
+
+
+
+
+
 .bulk-action-button {
     position: relative !important;
     cursor: pointer;
@@ -133,4 +186,19 @@ max-width: fit-content;
     z-index: 10;
     /* Ensures button stays on top */
     /* Remove unwanted margin */
+}
+.dropdown-toggle2:after {
+    border-bottom: 0;
+    border-left: .3em solid #0000;
+    border-right: .3em solid #0000;
+    border-top: .3em solid;
+    content: "";
+    display: inline-block;
+    margin-left: .255em;
+    vertical-align: .255em;
+}
+.dropdown-toggle2:after {
+    left: 2px;
+    position: relative;
+    top: 2px;
 }

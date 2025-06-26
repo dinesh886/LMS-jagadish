@@ -10,7 +10,7 @@
 
 .upcoming-test {
   background-color: var(--card-background);
-  border-radius: 8px;
+  border-radius: var(--card-border);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 24px;
   margin-bottom: 24px;

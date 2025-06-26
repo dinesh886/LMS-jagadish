@@ -15,10 +15,13 @@ import StudentRoutes from './Routes/StudentRoutes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Changed to min.css
 import PathLostPage from './Components/PathLostPage/PathLostPage';
+
 function App() {
   return (
-    <Router basename='/lmsinstitutejune2'>
+    <Router basename='/lmsinstitutejune5'>
       <Routes>
+     
+     
         {/* Define routes for institute Dashboard components */}
         <Route path="/" element={<MainDashboard />} />
         <Route path="/MainDashboard/*" element={<MainDashboard />} />

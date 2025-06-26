@@ -12,7 +12,13 @@
     align-items: center;
     margin-bottom: 32px;
 }
-
+.dashboardheading{
+  
+        color: #037DE2;
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+}
 .dashboard-title-container {
     display: flex;
     align-items: center;
@@ -85,13 +91,13 @@
 }
 
 .stat-title {
-    font-size: 14px;
-    color: #6B7280;
+    font-size: 16px;
+    color: #000;
     margin: 0 0 4px 0;
 }
 
 .dashboard-stat-value {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 600;
     color: #1F2937;
     margin: 0 0 4px 0;

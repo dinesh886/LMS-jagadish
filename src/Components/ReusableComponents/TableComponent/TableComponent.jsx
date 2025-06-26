@@ -15,6 +15,7 @@ const DataTable = ({
     studentActions = [],
     onBulkSuspend,
     onBulkTerminate,
+    selectableRows = true,
     onBulkSendMessage,
     enableToggle = false,
     showColumnVisibility = false,
@@ -27,8 +28,9 @@ const DataTable = ({
     onFilterTypeChange,
     expandedRows = [],
     searchPlaceholder = "Search...", // New prop for dynamic placeholder
-    
+    conditionalRowStyles,
     setExpandedRows,
+    sampleCandidates,
     expandableRowsComponent, // New prop for custom expanded content
 }) => {
     const [selectedRows, setSelectedRows] = useState([])
@@ -37,7 +39,8 @@ const DataTable = ({
     const [showTagOptions, setShowTagOptions] = useState(false)
     const [isTagModalOpen, setIsTagModalOpen] = useState(false)
     const [showMoreOptions, setShowMoreOptions] = useState(false)
-
+    const [suspendedStates, setSuspendedStates] = useState({});
+    const [terminatedStates, setTerminatedStates] = useState({});
     const selectAllCheckboxRef = useRef()
 
     // Handle search input change
@@ -115,7 +118,7 @@ const DataTable = ({
         <div className={fullViewMode ? "full-view" : ""}>
             <div className="test-index-actions">
              
-                    <div className="test-search-container mb-4 d-flex justify-content-between align-items-center">
+                    <div className="test-search-container mb-1 d-flex justify-content-between align-items-center">
                  
                         <div className="search-input-wrapper">
                         {searchoption && (
@@ -145,15 +148,20 @@ const DataTable = ({
                                 availableActions={availableActions}
                             />
                         )}
-                        {selectedRows.length > 1 && studentActions.length > 0 && (
-                            <StudentBulkActions
-                                selectedRows={selectedRows}
-                                studentActions={["suspend", "terminate", "sendMessage"]}
-                                onBulkSuspend={onBulkSuspend}
-                                onBulkTerminate={onBulkTerminate}
-                                onBulkSendMessage={onBulkSendMessage}
-                            />
-                        )}
+                    {selectedRows.length > 1 && studentActions.length > 0 && (
+                        <StudentBulkActions
+                            selectedRows={selectedRows.map(id => ({ id }))} // Convert to array of objects with id property
+                            studentActions={["suspend", "terminate", "sendMessage"]}
+                            onBulkSuspend={onBulkSuspend}
+                            onBulkTerminate={onBulkTerminate}
+                            onBulkSendMessage={onBulkSendMessage}
+                            suspendedStates={suspendedStates}
+                            setSuspendedStates={setSuspendedStates}
+                            terminatedStates={terminatedStates}
+                            setTerminatedStates={setTerminatedStates}
+                            allStudents={sampleCandidates} // Add this line
+                        />
+                    )}
                     </div>
                
             </div>
@@ -161,17 +169,20 @@ const DataTable = ({
                 <table className="custom-data-table">
                     <thead>
                         <tr>
-                            <th className="col-checkbox">
-                                <input
-                                    type="checkbox"
-                                    ref={selectAllCheckboxRef}
-                                    onChange={(e) => {
-                                        e.stopPropagation()
-                                        handleSelectAll(e)
-                                    }}
-                                    checked={selectedRows.length === data.length && data.length > 0}
-                                />
-                            </th>
+                            {selectableRows && (
+                                <th className="col-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        ref={selectAllCheckboxRef}
+                                        onChange={(e) => {
+                                            e.stopPropagation()
+                                            handleSelectAll(e)
+                                        }}
+                                        checked={selectedRows.length === data.length && data.length > 0}
+                                    />
+                                </th>
+                            )}
+
                             {columns.map((col, colIndex) => (
                                 <th
                                     key={colIndex}
@@ -211,7 +222,8 @@ const DataTable = ({
                     <tbody>
                         {data.length === 0 ? (
                             <tr>
-                                <td colSpan={columns.length + 1} className="empty-state">
+                                <td colSpan={columns.length + (selectableRows ? 1 : 0)} className="empty-state">
+
                                     <div className="empty-state-content">
                                         <div className="empty-state-icon">
                                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -243,17 +255,20 @@ const DataTable = ({
                                         className={`clickable-row ${selectedRows.includes(row.id) ? "checked-row" : ""} ${fullViewMode || expandedRows.includes(row.id) ? "expanded" : ""
                                             }`}
                                     >
-                                        <td className="col-checkbox" style={{ width: "50px" }}>
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedRows.includes(row.id)}
-                                                onChange={(e) => {
-                                                    e.stopPropagation()
-                                                    handleRowSelect(row.id)
-                                                }}
-                                                onClick={(e) => e.stopPropagation()}
-                                            />
-                                        </td>
+                                        {selectableRows && (
+                                            <td className="col-checkbox" style={{ width: "50px" }}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedRows.includes(row.id)}
+                                                    onChange={(e) => {
+                                                        e.stopPropagation()
+                                                        handleRowSelect(row.id)
+                                                    }}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                />
+                                            </td>
+                                        )}
+
                                         {columns.map((col, colIndex) => (
                                             <td
                                                 key={colIndex}
@@ -270,37 +285,69 @@ const DataTable = ({
                                                     {expandableRowsComponent ? (
                                                         expandableRowsComponent({ data: row })
                                                     ) : (
-                                                        <div className="default-expanded-content">
-                                                            <div className="answer-section">
-                                                                {/* <h4 className="answer-title">Answer:</h4> */}
-                                                                <div className="answer-content">
-                                                                    <LatexRenderer content={row.answer} />
-                                                                </div>
-                                                            </div>
-                                                            {(row.type === "MCQ" || row.type === "Mcq") && row.options && (
-                                                                <div className="mcq-options">
-                                                                    <h4 className="options-title">Options:</h4>
-                                                                    <div className="options-list">
-                                                                        {row.options.map((option, idx) => (
-                                                                            <div
-                                                                                key={idx}
-                                                                                className={`option-item ${row.correctAnswer === idx ? 'correct-option' : ''}`}
-                                                                            >
-                                                                                <div className="option-content">
-                                                                                    <span className="option-label">{String.fromCharCode(65 + idx)}.</span>
-                                                                                    <div className="option-text">
-                                                                                        <LatexRenderer content={option} />
-                                                                                    </div>
-                                                                                    {/* {row.correctAnswer === idx && (
-                                                                                        <span className="correct-indicator">✓ Correct</span>
-                                                                                    )} */}
+                                                            // In the expanded content section of TableComponent.jsx, modify the default-expanded-content:
+                                                            <div className="default-expanded-content">
+                                                                {row.type === "Programming" && row.code ? (
+                                                                    <div className="programming-section">
+                                                                        <h4 className="code-title">Code:</h4>
+                                                                        <pre className="code-content">
+                                                                            <code>{row.code}</code>
+                                                                        </pre>
+                                                                        {row.options && (
+                                                                            <div className="programming-options">
+                                                                                <h4 className="options-title">Options:</h4>
+                                                                                <div className="options-list">
+                                                                                    {row.options.map((option, idx) => (
+                                                                                        <div
+                                                                                            key={idx}
+                                                                                            className={`option-item ${row.correctAnswer === idx ? 'correct-option' : ''}`}
+                                                                                        >
+                                                                                            <div className="option-content">
+                                                                                                <span className="option-label">{String.fromCharCode(65 + idx)}.</span>
+                                                                                                <div className="option-text">
+                                                                                                    {option}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    ))}
                                                                                 </div>
                                                                             </div>
-                                                                        ))}
+                                                                        )}
                                                                     </div>
-                                                                </div>
-                                                            )}
-                                                        </div>
+                                                                ) : row.type === "Table" ? (
+                                                                    <div className="table-section">
+                                                                        <div dangerouslySetInnerHTML={{ __html: row.question }} />
+                                                                    </div>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className="answer-section">
+                                                                            <div className="answer-content">
+                                                                                <LatexRenderer content={row.answer} />
+                                                                            </div>
+                                                                        </div>
+                                                                        {(row.type === "MCQ" || row.type === "Mcq") && row.options && (
+                                                                            <div className="mcq-options">
+                                                                                <h4 className="options-title">Options:</h4>
+                                                                                <div className="options-list">
+                                                                                    {row.options.map((option, idx) => (
+                                                                                        <div
+                                                                                            key={idx}
+                                                                                            className={`option-item ${row.correctAnswer === idx ? 'correct-option' : ''}`}
+                                                                                        >
+                                                                                            <div className="option-content">
+                                                                                                <span className="option-label">{String.fromCharCode(65 + idx)}.</span>
+                                                                                                <div className="option-text">
+                                                                                                    <LatexRenderer content={option} />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+                                                                    </>
+                                                                )}
+                                                            </div>
                                                     )}
                                                 </div>
                                             </td>

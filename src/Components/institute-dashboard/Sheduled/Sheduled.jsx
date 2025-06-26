@@ -8,9 +8,10 @@ import Header from '../../header/header';
 import CompletedTestDetails from "../ThreeTests/Completed-test-details/CompletedTestDetails";
 import CompletedTest from "../ThreeTests/Completed-Test/CompletedTest";
 import TestStudentOverview from "../ThreeTests/Test-Student-Overview/TestStudentOverview";
+import { Helmet } from "react-helmet";
 const Scheduled = () => {
   const navigate = useNavigate();
-
+  
   // Function to navigate to the test details page with the test ID
   const handleViewDetails = (id) => {
     navigate(`/maindashboard/sheduled/current-running-test-details/${id}`);
@@ -32,6 +33,10 @@ const Scheduled = () => {
   };
   return (
     <div className="scheduled-container">
+      <Helmet>
+        <title> Scheduled Tests Ongoing, Upcomming, Completed</title>
+        <meta name="description" content="Scheduld Test , Ongoing,Upcomming , Completed" />
+      </Helmet>
       <Header />
       {/* Pass the function as a prop */}
       <CurrentRunningTest onViewDetails={handleViewDetails} />

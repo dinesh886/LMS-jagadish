@@ -20,6 +20,7 @@ import Header from '../../../header/header';
 import PaginationButtons from '../../../ReusableComponents/Pagination/PaginationButton';
 import PaginationInfo from '../../../ReusableComponents/Pagination/PaginationInfo';
 import clock from '../../../../images/clock.png';
+import { Helmet } from "react-helmet";
 
 const UpcomingTestDetails = () => {
   const { id } = useParams();
@@ -30,17 +31,14 @@ const UpcomingTestDetails = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [fullViewMode, setFullViewMode] = useState(false);
   const [showButtons, setShowButtons] = useState(true);
-  const [showFullViewButton, setShowFullViewButton] = useState(true);
-  const [allRowsExpanded, setAllRowsExpanded] = useState(false);
-  const [expandedRows, setExpandedRows] = useState([]);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
   const searchPlaceholder = "Search students...";
 
   const testData = {
-    hoursConsumed: 0,
-    candidatesAttended: 0,
+    hoursConsumed: 24,
+    candidatesAttended: 150,
     timerDuration: '01:20:00',
     name: 'Advanced JavaScript Assessment',
     owner: 'John Doe',
@@ -51,11 +49,9 @@ const UpcomingTestDetails = () => {
     description: 'This test evaluates advanced JavaScript concepts including closures, prototypes, and async programming.',
     instructions: 'Please read each question carefully. You have 2.5 hours to complete the test. Good luck!',
     candidates: [
-      // Existing candidates
       { id: 1, name: 'Alice Johnson', email: 'alice@example.com', class: '10-A', status: 'Enrolled' },
       { id: 2, name: 'Bob Smith', email: 'bob@example.com', class: '10-B', status: 'Invited' },
       { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', class: '10-C', status: 'Pending' },
-      // Additional candidates to demonstrate pagination
       { id: 4, name: 'David Wilson', email: 'david@example.com', class: '10-D', status: 'Enrolled' },
       { id: 5, name: 'Eve Davis', email: 'eve@example.com', class: '10-E', status: 'Invited' },
       { id: 6, name: 'Frank Miller', email: 'frank@example.com', class: '10-F', status: 'Pending' },
@@ -64,7 +60,6 @@ const UpcomingTestDetails = () => {
       { id: 9, name: 'Ivy Clark', email: 'ivy@example.com', class: '10-I', status: 'Pending' },
       { id: 10, name: 'Jack Walker', email: 'jack@example.com', class: '10-J', status: 'Enrolled' },
       { id: 11, name: 'Karen Hall', email: 'karen@example.com', class: '10-K', status: 'Invited' },
-   
     ]
   };
 
@@ -79,15 +74,6 @@ const UpcomingTestDetails = () => {
     );
   });
 
-  // Get current page data
-  const getCurrentPageData = () => {
-    if (fullViewMode) {
-      return filteredCandidates;
-    }
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    return filteredCandidates.slice(startIndex, startIndex + rowsPerPage);
-  };
-
   // Pagination functions
   const loadMore = () => {
     const newRows = rowsPerPage + 5;
@@ -100,18 +86,9 @@ const UpcomingTestDetails = () => {
 
   const toggleFullView = () => {
     if (!fullViewMode) {
-      // Enter Full View mode
       setRowsPerPage(filteredCandidates.length);
-      setAllRowsExpanded(true);
-      setShowFullViewButton(false);
-      setShowButtons(false);
     } else {
-      // Exit Full View mode
       setRowsPerPage(10);
-      setAllRowsExpanded(false);
-      setShowFullViewButton(true);
-      setShowButtons(true);
-      setExpandedRows([]);
     }
     setFullViewMode(!fullViewMode);
   };
@@ -146,7 +123,7 @@ const UpcomingTestDetails = () => {
     },
     // {
     //   name: "Status",
-    //   selector: "Status",
+    //   selector: "status",
     //   cell: (row) => <span className={`status ${row.status?.toLowerCase() || "na"}`}>{row.status || "N/A"}</span>,
     //   sortable: true,
     // }
@@ -154,25 +131,38 @@ const UpcomingTestDetails = () => {
 
   return (
     <>
+      <Helmet>
+        <title> Upcomming Test Details</title>
+        <meta name="description" content="Upcomming Test Details" />
+      </Helmet>
       <Header />
       <div className="test-details-container">
         <div className="top-cards-container">
           <div className="top-card">
+            <div className="card-icon">
+              <Clock size={24} />
+            </div>
             <div className="card-content">
-              <h4>Hours Consumed</h4>
-              <strong>{testData.hoursConsumed}/100</strong>
+              <h3>Hours Consumed</h3>
+              <p>{testData.hoursConsumed}/100</p>
             </div>
           </div>
           <div className="top-card">
+            <div className="card-icon">
+              <Users size={24} />
+            </div>
             <div className="card-content">
-              <h4>Candidates Attended</h4>
-              <strong>{testData.candidatesAttended}</strong>
+              <h3>Candidates Attended</h3>
+              <p>{testData.candidatesAttended}</p>
             </div>
           </div>
           <div className="top-card">
+            <div className="card-icon">
+              <Timer size={24} />
+            </div>
             <div className="card-content">
-              <h4>Timer</h4>
-              <strong>{testData.timerDuration}</strong>
+              <h3>Timer</h3>
+              <p>{testData.timerDuration}</p>
             </div>
           </div>
         </div>
@@ -181,50 +171,74 @@ const UpcomingTestDetails = () => {
           <h2>Test Details</h2>
           <div className="test2-info">
             <div className="info-item">
+              <div className="info-icon">
+                <FileText size={20} />
+              </div>
               <div className="info-content">
-                <h5> Test Name:</h5>
+                <strong>Test Name:</strong>
                 <span>{testData.name}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <User size={20} />
+              </div>
               <div className="info-content">
-                <h5>Owner:</h5>
+                <strong>Owner:</strong>
                 <span>{testData.owner}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <HelpCircle size={20} />
+              </div>
               <div className="info-content">
-                <h5>Questions:</h5>
+                <strong>Questions:</strong>
                 <span>{testData.questions}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <Target size={20} />
+              </div>
               <div className="info-content">
-                <h5>Marks:</h5>
+                <strong>Marks:</strong>
                 <span>{testData.marks}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <BookOpen size={20} />
+              </div>
               <div className="info-content">
-                <h5>Sections:</h5>
+                <strong>Sections:</strong>
                 <span>{testData.sections}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <FileText size={20} />
+              </div>
               <div className="info-content">
-                <h5>View Question Paper:</h5>
+                <strong>View Question Paper:</strong>
                 <span>{testData.owner}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <Users2 size={20} />
+              </div>
               <div className="info-content">
-                <h5>Class/Batch:</h5>
+                <strong>Class/Batch:</strong>
                 <span>{testData.classbatch}</span>
               </div>
             </div>
             <div className="info-item">
+              <div className="info-icon">
+                <Target size={20} />
+              </div>
               <div className="info-content">
-                <h5>Marks:</h5>
+                <strong>Marks:</strong>
                 <span>{testData.marks}</span>
               </div>
             </div>
@@ -233,15 +247,15 @@ const UpcomingTestDetails = () => {
           <div className="accordion">
             <div className="accordion-item">
               <button
-                className={`accordion-header ${expandedSection === 'description' ? 'active' : ''}`}
-                onClick={() => toggleSection('description')}
+                className={`accordion-header ${expandedSection === "description" ? "active" : ""}`}
+                onClick={() => toggleSection("description")}
               >
                 Description
                 <span className="accordion-icon">
-                  {expandedSection === 'description' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  {expandedSection === "description" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </span>
               </button>
-              {expandedSection === 'description' && (
+              {expandedSection === "description" && (
                 <div className="accordion-content">
                   <p>{testData.description}</p>
                 </div>
@@ -249,15 +263,15 @@ const UpcomingTestDetails = () => {
             </div>
             <div className="accordion-item">
               <button
-                className={`accordion-header ${expandedSection === 'instructions' ? 'active' : ''}`}
-                onClick={() => toggleSection('instructions')}
+                className={`accordion-header ${expandedSection === "instructions" ? "active" : ""}`}
+                onClick={() => toggleSection("instructions")}
               >
                 Instructions
                 <span className="accordion-icon">
-                  {expandedSection === 'instructions' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  {expandedSection === "instructions" ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </span>
               </button>
-              {expandedSection === 'instructions' && (
+              {expandedSection === "instructions" && (
                 <div className="accordion-content">
                   <p>{testData.instructions}</p>
                 </div>
@@ -269,32 +283,24 @@ const UpcomingTestDetails = () => {
         <div className="candidate-details-card">
           <div className="status-header">
             <div className="status-title status-title2">
+              <BarChart2 size={20} className="status-title-icon" />
               <h3>Student Table</h3>
             </div>
           </div>
 
           <DataTable
             columns={columns}
-            data={getCurrentPageData()}
+            data={filteredCandidates}
             pagination
             highlightOnHover
             searchoption={true}
+            selectableRows={false}  // This disables the checkboxes
             searchQuery={searchQuery}
             searchPlaceholder={searchPlaceholder}
             onSearchChange={handleSearchChange}
-            enableToggle={true}
-            showColumnVisibility={false}
-            fullViewMode={fullViewMode}
-            allRowsExpanded={allRowsExpanded}
-            onToggleAllRows={toggleFullView}
-            expandedRows={expandedRows}
-            setExpandedRows={setExpandedRows}
           />
-
-         
         </div>
       </div>
-      {/* Pagination components */}
 
       {(showButtons || (fullViewMode && rowsPerPage < filteredCandidates.length)) && (
         <>
@@ -303,9 +309,9 @@ const UpcomingTestDetails = () => {
             rowsPerPage={rowsPerPage}
             currentPage={currentPage}
             loadMore={loadMore}
-            toggleFullView={toggleFullView}
+            fullView={toggleFullView}
             fullViewMode={fullViewMode}
-            showFullViewButton={showFullViewButton}
+            showFullViewButton={true}
           />
           <PaginationInfo
             filteredQuestions={filteredCandidates}

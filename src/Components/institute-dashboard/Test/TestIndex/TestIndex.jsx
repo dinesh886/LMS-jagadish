@@ -29,6 +29,7 @@ import PaginationButtons from "../../../ReusableComponents/Pagination/Pagination
 import PaginationInfo from "../../../ReusableComponents/Pagination/PaginationInfo";
 import PublishModal from "../../../ReusableComponents/PublishModal/PublishModal";
 import Header from "../../../header/header";
+import { Helmet } from "react-helmet";
 
 const data = [
   { id: 1, test: "Test 1", owner: "John Doe", status: "Published", lastModified: "2 days ago by You" },
@@ -372,6 +373,10 @@ const TestIndex = () => {
 
   return (
     <>
+      <Helmet>
+        <title> Tests</title>
+        <meta name="description" content="Tests" />
+      </Helmet>
       <Header />
       <div className="test-index-wrapper">
         <div className="test-index-container">

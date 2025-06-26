@@ -2,6 +2,7 @@
 
 import DataTable from "../../../ReusableComponents/TableComponent/TableComponent"
 import { useState, useEffect } from "react"
+import { useParams, useNavigate, useLocation } from "react-router-dom"
 import PaginationButtons from "../../../ReusableComponents/Pagination/PaginationButton"
 import PaginationInfo from "../../../ReusableComponents/Pagination/PaginationInfo"
 import Header from "../../../header/header"
@@ -10,8 +11,10 @@ import { toast } from "react-toastify"
 import "./classdetailspage.css"
 import { FaArchive, FaTrashAlt, FaEllipsisH, FaUsers, FaUserCheck, FaUserTimes, FaRegWindowRestore } from "react-icons/fa"
 import { Link } from "react-router-dom"
+import { Helmet } from "react-helmet";
 
 const ClassDetailsPage = () => {
+  const { id , name} = useParams()
   const initialData = [
     { id: 1, name: "Karthick", email: "karthick.k@gmail.com", joinDate: "16/06/2023", status: "active" },
     { id: 2, name: "Manikandan", email: "manikandan.r@gmail.com", joinDate: "20/06/2023", status: "inactive" },
@@ -229,11 +232,15 @@ const ClassDetailsPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title> Students</title>
+        <meta name="description" content="Class Details Page" />
+      </Helmet>
       <Header />
       <div className="test-index-wrapper">
         <div className="test-index-container">
           <div className="test-index-header">
-            <h1 className="breadcrumb">Class 1 Students</h1>
+            <h1 className="breadcrumb">Class {id} Students</h1>
 
             {/* View Toggle Buttons */}
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
 import {
   DollarSign,
@@ -17,17 +17,53 @@ import {
   BookOpen,
   FileText,
   Menu,
-  CircleDollarSign ,
-  BookOpenCheck ,
+  CircleDollarSign,
+  BookOpenCheck,
   X,
 } from "lucide-react"
 import "./sidemenu.css"
 
 const SidebarMenu = () => {
+  const location = useLocation()
   const [isManageHomeVisible, setManageHomeVisible] = useState(true)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
-  const location = useLocation()
-  const [activeSection, setActiveSection] = useState("general")
+
+  const currentPath = location.pathname
+
+  const isActive = (section) => {
+    const path = currentPath;
+
+    switch (section) {
+      case "general":
+        return path === "/";
+
+      case "sheduled":
+        return (
+          path.startsWith("/maindashboard/sheduled") ||
+          path.includes("/current-running-test-details/") ||
+          path.includes("/upcoming-test-details/") ||
+          path.includes("/completed-test-details/")
+        );
+
+      case "unscheduled":
+        return (
+          path.startsWith("/maindashboard/unscheduled") ||
+          path.includes("/unscheduledtest-details/")
+        );
+
+      case "subscription":
+        return path === "/maindashboard/subscription";
+
+      case "teachers":
+        return path.includes("/Teachers");
+
+      default:
+        return path.includes(section);
+    }
+  }
+  
+  
+  
 
   const toggleManageHomeVisibility = () => {
     setManageHomeVisible(!isManageHomeVisible)
@@ -37,18 +73,14 @@ const SidebarMenu = () => {
     setIsMobileOpen(!isMobileOpen)
   }
 
-  const handleSetActive = (section) => {
-    setActiveSection(section)
-    // Close mobile sidebar when a link is clicked
+  const handleCloseMobile = () => {
     setIsMobileOpen(false)
   }
 
   return (
     <div className="sidebar-wrapper">
-      {/* Mobile Overlay */}
-      {isMobileOpen && <div className="mobile-overlay" onClick={() => setIsMobileOpen(false)} />}
+      {isMobileOpen && <div className="mobile-overlay" onClick={handleCloseMobile} />}
 
-      {/* Sidebar Container */}
       <nav className={`test-sidebar-container ${isMobileOpen ? "mobile-open" : ""}`} aria-label="Main Navigation">
         <div className="test-sidebar-header">
           <span className="sidebar-letters">LMS Institute</span>
@@ -60,10 +92,10 @@ const SidebarMenu = () => {
 
             <li>
               <Link
-                to="/maindashboard/general"
-                className={`sidebar-contents ${activeSection === "general" ? "active" : ""}`}
+                to="/"
+                className={`sidebar-contents ${isActive("general") ? "active" : ""}`}
                 aria-label="General"
-                onClick={() => handleSetActive("general")}
+                onClick={handleCloseMobile}
               >
                 <Users className="icon" size={20} />
                 <span className="sidebar-letters">General</span>
@@ -73,21 +105,22 @@ const SidebarMenu = () => {
             <li>
               <Link
                 to="/maindashboard/sheduled"
-                className={`sidebar-contents ${activeSection === "sheduled" ? "active" : ""}`}
+                className={`sidebar-contents ${isActive("sheduled") ? "active" : ""}`}
                 aria-label="Sheduled"
-                onClick={() => handleSetActive("sheduled")}
+                onClick={handleCloseMobile}
               >
                 <UserCheck className="icon" size={20} />
                 <span className="sidebar-letters">Sheduled</span>
               </Link>
+
             </li>
 
             <li>
               <Link
                 to="/maindashboard/unscheduled"
-                className={`sidebar-contents ${activeSection === "unscheduled" ? "active" : ""}`}
+                className={`sidebar-contents ${currentPath === "/maindashboard/unscheduled" ? "active" : ""}`}
                 aria-label="UnScheduled"
-                onClick={() => handleSetActive("unscheduled")}
+                onClick={handleCloseMobile}
               >
                 <ClipboardList className="icon" size={20} />
                 <span className="sidebar-letters">UnScheduled</span>
@@ -97,9 +130,9 @@ const SidebarMenu = () => {
             <li>
               <Link
                 to="/Teachers"
-                className={`sidebar-contents ${activeSection === "teachers" ? "active" : ""}`}
+                className={`sidebar-contents ${currentPath.includes("/Teachers") ? "active" : ""}`}
                 aria-label="Teachers"
-                onClick={() => handleSetActive("teachers")}
+                onClick={handleCloseMobile}
               >
                 <BookOpenCheck className="icon" size={20} />
                 <span className="sidebar-letters">Teachers</span>
@@ -109,9 +142,9 @@ const SidebarMenu = () => {
             <li>
               <Link
                 to="/subscription"
-                className={`sidebar-contents ${activeSection === "subscription" ? "active" : ""}`}
+                className={`sidebar-contents ${currentPath === "/subscription" ? "active" : ""}`}
                 aria-label="Subscription"
-                onClick={() => handleSetActive("subscription")}
+                onClick={handleCloseMobile}
               >
                 <CircleDollarSign className="icon" size={20} />
                 <span className="sidebar-letters">Subscription</span>
@@ -120,11 +153,6 @@ const SidebarMenu = () => {
 
             <li className="sidebar-section-title" onClick={toggleManageHomeVisibility}>
               Manage Home
-              {/* {isManageHomeVisible ? (
-                <ChevronUp className="toggle-icon" size={16} />
-              ) : (
-                <ChevronDown className="toggle-icon" size={16} />
-              )} */}
             </li>
 
             {isManageHomeVisible && (
@@ -132,9 +160,9 @@ const SidebarMenu = () => {
                 <li>
                   <Link
                     to="/home"
-                    className={`sidebar-contents ${activeSection === "home" ? "active" : ""}`}
+                    className={`sidebar-contents ${currentPath === "/home" ? "active" : ""}`}
                     aria-label="Home"
-                    onClick={() => handleSetActive("home")}
+                    onClick={handleCloseMobile}
                   >
                     <Home className="icon" size={20} />
                     <span className="sidebar-letters">Home</span>
@@ -144,9 +172,9 @@ const SidebarMenu = () => {
                 <li>
                   <Link
                     to="/about"
-                    className={`sidebar-contents ${activeSection === "about" ? "active" : ""}`}
+                    className={`sidebar-contents ${currentPath === "/about" ? "active" : ""}`}
                     aria-label="About"
-                    onClick={() => handleSetActive("about")}
+                    onClick={handleCloseMobile}
                   >
                     <Info className="icon" size={20} />
                     <span className="sidebar-letters">About</span>
@@ -156,9 +184,9 @@ const SidebarMenu = () => {
                 <li>
                   <Link
                     to="/courses"
-                    className={`sidebar-contents ${activeSection === "courses" ? "active" : ""}`}
+                    className={`sidebar-contents ${currentPath === "/courses" ? "active" : ""}`}
                     aria-label="Courses"
-                    onClick={() => handleSetActive("courses")}
+                    onClick={handleCloseMobile}
                   >
                     <BookOpen className="icon" size={20} />
                     <span className="sidebar-letters">Courses</span>
@@ -168,9 +196,9 @@ const SidebarMenu = () => {
                 <li>
                   <Link
                     to="/blog-manage"
-                    className={`sidebar-contents ${activeSection === "blog" ? "active" : ""}`}
+                    className={`sidebar-contents ${currentPath === "/blog-manage" ? "active" : ""}`}
                     aria-label="Blog"
-                    onClick={() => handleSetActive("blog")}
+                    onClick={handleCloseMobile}
                   >
                     <FileText className="icon" size={20} />
                     <span className="sidebar-letters">Blog</span>
@@ -184,9 +212,9 @@ const SidebarMenu = () => {
             <li>
               <Link
                 to="/profile"
-                className={`sidebar-contents ${activeSection === "profile" ? "active" : ""}`}
+                className={`sidebar-contents ${currentPath === "/profile" ? "active" : ""}`}
                 aria-label="Profile"
-                onClick={() => handleSetActive("profile")}
+                onClick={handleCloseMobile}
               >
                 <User className="icon" size={20} />
                 <span className="sidebar-letters">Profile</span>
@@ -198,7 +226,7 @@ const SidebarMenu = () => {
                 to="/logout"
                 className="sidebar-contents"
                 aria-label="Logout"
-                onClick={() => handleSetActive("logout")}
+                onClick={handleCloseMobile}
               >
                 <Power className="icon" size={20} />
                 <span className="sidebar-letters">Logout</span>
@@ -208,7 +236,6 @@ const SidebarMenu = () => {
         </div>
       </nav>
 
-      {/* Mobile Toggle Button */}
       <button
         className={`mobile-toggle-btn ${isMobileOpen ? "sidebar-open" : ""}`}
         onClick={toggleMobileSidebar}

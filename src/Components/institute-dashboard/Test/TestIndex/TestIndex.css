@@ -2,11 +2,12 @@
 .test-index-container {
   margin-top: 1rem;
   background-color: var(--index-container-bg);
-  border-radius: var(--index-container-border-radius);
+  border-radius: 8px;
   box-shadow: var(--index-container-box-shadow);
   padding: var(--index-container-padding);
   position: relative;
   overflow-x: auto;
+  /* border: 1px solid #e7e9ee; */
 }
 
 /* Title */
@@ -48,11 +49,13 @@
 .tag-options ul,
 .more-options ul {
   list-style-type: none;
-  padding: var(--list-padding);
+  padding: 0px 8px;
   margin: var(--list-margin);
   margin-bottom: var(--list-margin-bottom);
 }
-
+.more-options ul {
+padding: 8px ;
+}
 .more-options ul li:hover {
   background-color: var(--hover-bg);
 }
@@ -373,17 +376,19 @@
 
 /* Add Tag Button */
 .add-tag-button2 {
-  border: none;
+  border-top: 1px solid #ddd;
   outline: none;
   background-color: transparent;
   color: var(--add-tag-btn-color) !important;
   font-size: var(--add-tag-btn-font-size);
   text-align: left !important;
-  padding: 0 !important;
+  padding: 10px 10px  !important;
   padding-top: var(--add-tag-btn-padding-top);
   width: 100%;
 }
-
+.addtotag-box-heading{
+  padding: 10px 10px 0px 10px;
+}
 /* Horizontal Rule */
 .hr-tag {
   margin: var(--hr-tag-margin);
@@ -394,7 +399,9 @@
   background-color: var(--add-tag-btn-bg-hover);
   color: var(--add-tag-btn-color) !important;
 }
-
+.tag-options p{
+  margin-bottom: 0px;
+}
 /* NEW MOBILE DROPDOWN STYLES */
 
 /* Mobile Actions Dropdown Container */
@@ -410,7 +417,7 @@
   cursor: pointer;
   padding: 8px;
   font-size: 16px;
-  color: #000;
+  color: #1B222C;
   border-radius: 50%;
   transition: background-color 0.2s ease, color 0.2s ease;
 }

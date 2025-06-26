@@ -26,6 +26,7 @@ const RelativePerformance = () => {
             <div className="relativeperformance-card">
                 <div className="relativeperformance-card-header">
                     <div className="relativeperformance-header-content">
+                        <BarChart3 size={20} />
                         <h2>Relative Performance</h2>
                       
                     </div>

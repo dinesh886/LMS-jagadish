@@ -28,6 +28,9 @@ import { toast } from "react-toastify"
 import Header from "../../../header/header"
 import { IoMdCheckmark, IoMdClose } from 'react-icons/io';
 import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import PaginationButtons from "../../../ReusableComponents/Pagination/PaginationButton";
+import PaginationInfo from "../../../ReusableComponents/Pagination/PaginationInfo";
 
 const UnscheduledTestDetails = () => {
     const { id } = useParams();
@@ -36,6 +39,10 @@ const UnscheduledTestDetails = () => {
     const [suspendedStates, setSuspendedStates] = useState({});
     const [hoveredScoreKey, setHoveredScoreKey] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [fullViewMode, setFullViewMode] = useState(false);
+    const [showButtons, setShowButtons] = useState(true);
 
     // Hardcoded sample data for the table
     const sampleCandidates = [
@@ -107,6 +114,25 @@ const UnscheduledTestDetails = () => {
         };
     }, []);
 
+    // Pagination functions
+    const loadMore = () => {
+        const newRows = rowsPerPage + 5;
+        setRowsPerPage(newRows);
+
+        if (newRows >= filteredCandidates.length) {
+            setShowButtons(false);
+        }
+    };
+
+    const toggleFullView = () => {
+        if (!fullViewMode) {
+            setRowsPerPage(filteredCandidates.length);
+        } else {
+            setRowsPerPage(10);
+        }
+        setFullViewMode(!fullViewMode);
+    };
+
     const toggleSection = (section) => {
         setExpandedSection(expandedSection === section ? null : section)
     }
@@ -117,6 +143,7 @@ const UnscheduledTestDetails = () => {
 
     const handleSearchChange = (value) => {
         setSearchQuery(value);
+        setCurrentPage(1); // Reset to first page when searching
     };
 
     const handleSendReminder = (row) => {
@@ -137,7 +164,7 @@ const UnscheduledTestDetails = () => {
         }
 
         setOpenDropdown(null);
-      };
+    };
     const handleBulkSendReminders = (selectedRows) => {
         const names = selectedRows.map(row => row.name).join(', ');
         toast.info(`Reminders sent to ${selectedRows.length} students: ${names}`);
@@ -149,7 +176,7 @@ const UnscheduledTestDetails = () => {
     const handleSendNotification = (row) => {
         toast.info(`Notification sent to ${row.name} `)
         setOpenDropdown(null)
-      }
+    }
     const handleScheduleTest = () => {
         toast.success("Test scheduling modal opened");
         // In a real app, this would open a modal for scheduling
@@ -179,97 +206,27 @@ const UnscheduledTestDetails = () => {
             selector: (row) => row.status || "N/A",
             cell: (row) => <span className={`status ${row.status?.toLowerCase().replace(' ', '-') || "na"}`}>{row.status || "N/A"}</span>,
             sortable: true,
-        },
-        {
-            name: "Options",
-            cell: (row) => (
-                <div className="options-dropdown-container"
-                    ref={openDropdown === row.id ? dropdownRef : null}
-                >
-                    <button
-                        className="options-dropdown-toggle"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleDropdownToggle(row.id);
-                        }}
-                    >
-                        <MoreVertical size={16} />
-                    </button>
-                    {openDropdown === row.id && (
-                        <div className="options-dropdown-menu">
-                            <div
-                                className={`options-status-toggle ${suspendedStates[row.id] ? "disabled" : "enabled"}`}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSuspendToggle(row);
-                                }}
-                            >
-                                <button className="options-dropdown-item">
-                                    <MonitorX size={14} />
-                                    {suspendedStates[row.id] ? "Resume" : "Suspend"}
-                                    <div className="options-status-toggle-track">
-                                        <div
-                                            className={`options-status-toggle-thumb ${suspendedStates[row.id] ? "disabled" : "enabled"}`}
-                                        >
-                                            {!suspendedStates[row.id] ? (
-                                                <IoMdCheckmark className="status-icon" />
-                                            ) : (
-                                                <IoMdClose className="status-icon" />
-                                            )}
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-                            <button
-                                className="options-dropdown-item"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleTerminate(row);
-                                }}
-                            >
-                                <Power size={14} /> Terminate
-                            </button>
-                            {/* <button
-                                className="options-dropdown-item options-dropdown-item3"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSendNotification(row);
-                                }}
-                            >
-                                <Forward size={14} />
-                                Send Notification
-                            </button> */}
-                        </div>
-                    )}
-                </div>
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button: true,
-          }
+        }
     ];
 
     return (
         <>
+            <Helmet>
+                <title> UnScheduled Test Details</title>
+                <meta name="description" content="Unscheduled Test Details" />
+            </Helmet>
             <Header />
             <div className="test-details-container">
-                {/* <div className="unscheduled-banner">
-                    <AlertCircle size={24} />
-                    <span>This test has not been scheduled yet. Please set a date and time for the test.</span>
-                    <button className="schedule-test-btn" onClick={handleScheduleTest}>
-                        <Calendar size={16} /> Schedule Test
-                    </button>
-                </div> */}
-
                 <div className="main-card unscheduled-test-maincard">
-                    <h2>Test Details (ID: {id})</h2>
+                    <h2>Test Details </h2>
+                    {/* <h2>Test Details (ID: {id})</h2> */}
                     <div className="test2-info">
                         <div className="info-item">
                             <div className="info-icon">
                                 <FileText size={20} />
                             </div>
                             <div className="info-content">
-                                <strong>Name:</strong>
+                                <h5>Name:</h5>
                                 <span>{testData.name}</span>
                             </div>
                         </div>
@@ -278,7 +235,7 @@ const UnscheduledTestDetails = () => {
                                 <User size={20} />
                             </div>
                             <div className="info-content">
-                                <strong>Owner:</strong>
+                                <h5>Owner:</h5>
                                 <span>{testData.owner}</span>
                             </div>
                         </div>
@@ -287,7 +244,7 @@ const UnscheduledTestDetails = () => {
                                 <HelpCircle size={20} />
                             </div>
                             <div className="info-content">
-                                <strong>Questions:</strong>
+                                <h5>Questions:</h5>
                                 <span>{testData.questions}</span>
                             </div>
                         </div>
@@ -296,25 +253,16 @@ const UnscheduledTestDetails = () => {
                                 <Target size={20} />
                             </div>
                             <div className="info-content">
-                                <strong>Marks:</strong>
+                                <h5>Marks:</h5>
                                 <span>{testData.marks}</span>
                             </div>
                         </div>
-                        {/* <div className="info-item">
-                            <div className="info-icon">
-                                <BookOpen size={20} />
-                            </div>
-                            <div className="info-content">
-                                <strong>Sections:</strong>
-                                <span>{testData.sections}</span>
-                            </div>
-                        </div> */}
                         <div className="info-item">
                             <div className="info-icon">
                                 <FileText size={20} />
                             </div>
                             <div className="info-content">
-                                <strong>View Question Paper:</strong>
+                                <h5>View Question Paper:</h5>
                                 <span>View</span>
                             </div>
                         </div>
@@ -323,7 +271,7 @@ const UnscheduledTestDetails = () => {
                                 <Users2 size={20} />
                             </div>
                             <div className="info-content">
-                                <strong>Class/Batch:</strong>
+                                <h5>Class/Batch:</h5>
                                 <span>Class 10</span>
                             </div>
                         </div>
@@ -368,11 +316,8 @@ const UnscheduledTestDetails = () => {
                 <div className="candidate-details-card">
                     <div className="status-header">
                         <div className="status-title status-title2">
-                            <Users2 size={20} className="status-title-icon" />
-                            <h3>Enrolled Students</h3>
-                        </div>
-                        <div className="status-subtitle status-subtitle2">
-                            Student Table ({filteredCandidates.length})
+                            <BarChart2 size={20} className="status-title-icon" />
+                            <h3>Student Table</h3>
                         </div>
                     </div>
                     <DataTable
@@ -380,13 +325,34 @@ const UnscheduledTestDetails = () => {
                         data={filteredCandidates}
                         pagination
                         highlightOnHover
-                        studentActions={["sendReminder"]}
-                        onBulkSendReminders={handleBulkSendReminders}
                         searchoption={true}
                         searchQuery={searchQuery}
+                        searchPlaceholder="Search students..."
                         onSearchChange={handleSearchChange}
                     />
                 </div>
+
+                {(showButtons || (fullViewMode && rowsPerPage < filteredCandidates.length)) && (
+                    <>
+                        <PaginationButtons
+                            filteredQuestions={filteredCandidates}
+                            rowsPerPage={rowsPerPage}
+                            currentPage={currentPage}
+                            loadMore={loadMore}
+                            fullView={toggleFullView}
+                            fullViewMode={fullViewMode}
+                            showFullViewButton={true}
+                        />
+                        <PaginationInfo
+                            filteredQuestions={filteredCandidates}
+                            rowsPerPage={rowsPerPage}
+                            currentPage={currentPage}
+                            label="Students"
+                            totalItems={sampleCandidates.length}
+                            isSearching={searchQuery.length > 0}
+                        />
+                    </>
+                )}
             </div>
         </>
     )

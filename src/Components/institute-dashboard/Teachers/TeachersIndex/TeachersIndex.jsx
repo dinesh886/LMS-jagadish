@@ -1,6 +1,5 @@
-
 import DataTable from "../../../ReusableComponents/TableComponent/TableComponent";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdOutlineArchive } from "react-icons/md";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PaginationButtons from "../../../ReusableComponents/Pagination/PaginationButton";
@@ -23,198 +22,285 @@ import {
   FaCheck,
   FaTimes,
   FaChevronDown,
-  FaArrowUp
-
+  FaArrowUp,
+  FaUserCheck,
+  FaUserTimes,
+  FaUsers
 } from "react-icons/fa";
 import './TeachersIndex.css'
-// import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaCopy } from "react-icons/fa";
-import TopBar from "../../class-batch/classtopbar/classtopbar";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { toast } from "react-toastify";
+import ToggleSwitch from "../../../ReusableComponents/ToggleSwitch/ToggleSwitch";
 
 const TeachersIndex = () => {
-  const data =[
-    { id: 1, name:"Jhon Doe", email: 'teacher1@example.com', date: '26-12-2024', status: 'Inactive' },
-    { id: 2, name: "Jhon Doe", email: 'teacher2@example.com', date: '27-12-2024', status: 'Active' },
-    { id: 3, name: "Jhon Doe", email: 'teacher3@example.com', date: '27-12-2024', status: 'Active' },
+  const initialData = [
+    { id: 1, name: "John Doe", email: 'teacher1@example.com', date: '26-12-2024', status: 'inactive' },
+    { id: 2, name: "Jane Smith", email: 'teacher2@example.com', date: '27-12-2024', status: 'active' },
+    { id: 3, name: "Robert Johnson", email: 'teacher3@example.com', date: '27-12-2024', status: 'active' },
+    { id: 4, name: "Emily Davis", email: 'teacher4@example.com', date: '28-12-2024', status: 'inactive' },
+    { id: 5, name: "Michael Wilson", email: 'teacher5@example.com', date: '29-12-2024', status: 'active' },
   ];
 
-  const [rowsPerPage, setRowsPerPage] = useState(5); // Set the number of rows per page
-  const [showButtons, setShowButtons] = useState(true);
+  // State management
+  const [data, setData] = useState(initialData);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataTableVisible, setDataTableVisible] = useState(false);
-  const paginatedData = data.slice(0, rowsPerPage);
-  const [activeStates, setActiveStates] = useState(new Map());
-  const loadMore = () => {
-    setRowsPerPage((prevRows) => {
-      const newRows = prevRows + 5;
-      if (newRows >= data.length) setShowButtons(false); // Hide buttons if all data is shown
-      return newRows;
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
+  const [fullViewMode, setFullViewMode] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [currentView, setCurrentView] = useState("all"); // 'all', 'active', 'inactive'
+
+  // Check if screen is mobile size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.mobile-actions-dropdown')) {
+        setOpenDropdownId(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Filter data based on search and status
+  const getFilteredData = () => {
+    let filteredData = data;
+
+    // Filter by current view
+    if (currentView === "active") {
+      filteredData = filteredData.filter((teacher) => teacher.status === "active");
+    } else if (currentView === "inactive") {
+      filteredData = filteredData.filter((teacher) => teacher.status === "inactive");
+    }
+
+    // Apply search and status filters
+    return filteredData.filter((teacher) => {
+      const matchesSearch =
+        searchQuery === "" ||
+        teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        teacher.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        teacher.date.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesStatus = filterStatus === "" || teacher.status === filterStatus;
+
+      return matchesSearch && matchesStatus;
     });
   };
-  const handleActive = (row) => {
-    setActiveStates((prevStates) => {
-      const newStates = new Map(prevStates);
-      newStates.set(row.id, !prevStates.get(row.id)); // Toggle active state
-      return newStates;
-    });
-    console.log("Toggled active state for row:", row);
-    // Add your logic to update the backend or perform other actions
+
+  const filteredData = getFilteredData();
+
+  // Get current page data
+  const getCurrentPageData = () => {
+    if (fullViewMode) {
+      return filteredData;
+    }
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    return filteredData.slice(startIndex, startIndex + rowsPerPage);
   };
 
-  const fullView = () => {
-    setRowsPerPage(data.length); // Show all data
-    setShowButtons(false); // Hide buttons after Full View
+  // Toggle teacher status
+  const toggleTeacherStatus = (teacherId) => {
+    setData(prevData =>
+      prevData.map(teacher =>
+        teacher.id === teacherId
+          ? { ...teacher, status: teacher.status === "active" ? "inactive" : "active" }
+          : teacher
+      )
+    );
+
+    const teacher = data.find(t => t.id === teacherId);
+    toast.success(
+      `Teacher ${teacher.name} has been ${teacher.status === "active" ? "deactivated" : "activated"}`,
+      { position: "top-right", autoClose: 3000 }
+    );
   };
 
-
-
-  const handleDelete = (row) => {
-    console.log("Delete clicked for row:", row);
-    // Add your logic to delete the row
+  const handleArchive = (teacher) => {
+    toast.info(`Archiving teacher ${teacher.name}`, { autoClose: 2000 });
+    setOpenDropdownId(null); // Close dropdown after action
   };
 
+  const handleDelete = (teacher) => {
+    toast.warning(`Deleting teacher ${teacher.name}`, { autoClose: 2000 });
+    setOpenDropdownId(null); // Close dropdown after action
+  };
 
+  const toggleDropdown = (rowId) => {
+    setOpenDropdownId(openDropdownId === rowId ? null : rowId);
+  };
 
-  
+  // Get counts for different views
+  const activeCount = data.filter((teacher) => teacher.status === "active").length;
+  const inactiveCount = data.filter((teacher) => teacher.status === "inactive").length;
+  const totalCount = data.length;
+
   const columns = [
     {
-      name: (
-        <div className="flex items-center">
-          <span>Name</span>
-        </div>
-      ),
-      selector: "test",
+      name: "Teacher Names",
+      selector: "name",
       cell: (row) => (
-        <div className="flex items-center">
-          <Link >
-            <span className="row-link">{row.name}</span>
-          </Link>
-        </div>
+        <Link to={`/teacher/${row.id}`} className="row-link">
+          {row.name}
+        </Link>
       ),
     },
     {
-      name: (
-        <div className="flex items-center">
-          <span>Email</span>
-        </div>
-      ),
-      selector: "test",
-      cell: (row) => (
-        <div className="flex items-center">
-          <Link >
-            <span className="row-link">{row.email}</span>
-          </Link>
-        </div>
-      ),
+      name: "Teacher Emails",
+      selector: "email",
     },
-    // {
-    //   name: (
-    //     <div className="cursor-pointer">
-    //       Questions
-    //     </div>
-    //   ),
-    //   selector: "questions",
-    //   sortable: true,
-    // },
     {
-      name: (
-        <div className="cursor-pointer">
-         Added Date
-        </div>
-      ),
+      name: "Added Date",
       selector: "date",
-      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: "status",
+      cell: (row) => (
+        <span className={`status-text ${row.status === "active" ? "active" : "inactive"}`}>
+          {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+        </span>
+      ),
     },
     {
       name: "Actions",
       selector: "actions",
-      sortable: false, // Ensures sorting is disabled for this column
-      cell: (row) => {
-        const isActive = activeStates.get(row.id) || false; // Default to false if not set
-        return (
-          <div className="test-action-buttons flex gap-2">
-            {/* Active/Deactivate Button */}
-            <button
-              className={`test-action-button ${isActive ? "active" : "deactive"}`}
-              aria-label={isActive ? "Active" : "Deactive"}
-              onClick={() => handleActive(row)}
-            >
-              {isActive ? <FaTimes /> : <FaCheck />} {/* Change icon based on state */}
-              <span className="tooltip-text">
-                {isActive ? "Deactive" : "Active"}
-              </span>
-            </button>
-            <button className="test-action-button archive" aria-label="Archive">
-              <FaArchive />
-              <span className="tooltip-text">Archive</span>
-            </button>
-            {/* Delete Button */}
-            <button
-              className="test-action-button delete"
-              aria-label="Delete"
-              onClick={() => handleDelete(row)}
-            >
-              <FaTrashAlt />
-              <span className="tooltip-text">Delete</span>
-            </button>
-          </div>
-        );
-      },
+      cell: (row) => (
+        <div className="action-button-group">
+          {isMobile ? (
+            <div className="mobile-actions-dropdown">
+              <button
+                className="test-action-button mobile-menu-trigger"
+                onClick={() => toggleDropdown(row.id)}
+                aria-label="More actions"
+              >
+                <FaEllipsisH />
+              </button>
+
+              {openDropdownId === row.id && (
+                <div className="mobile-actions-menu">
+                  <div className="mobile-action-item">
+                    <ToggleSwitch
+                      isActive={row.status === "active"}
+                      onToggle={() => toggleTeacherStatus(row.id)}
+                    />
+                    <span>{row.status === "active" ? "Deactivate" : "Activate"}</span>
+                  </div>
+                  <button
+                    className="mobile-action-item archive"
+                    onClick={() => handleArchive(row)}
+                  >
+                    <FaArchive />
+                    <span>Archive</span>
+                  </button>
+                  <button
+                    className="mobile-action-item delete"
+                    onClick={() => handleDelete(row)}
+                  >
+                    <FaTrashAlt />
+                    <span>Delete</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <ToggleSwitch
+                className="test-action-button"
+                isActive={row.status === "active"}
+                onToggle={() => toggleTeacherStatus(row.id)}
+              />
+              <button
+                className="test-action-button archive"
+                onClick={() => handleArchive(row)}
+                title="Archive teacher"
+              >
+                <FaArchive />
+                <span className="tooltip-text">Archive</span>
+              </button>
+              <button
+                className="test-action-button delete"
+                onClick={() => handleDelete(row)}
+                title="Delete teacher"
+              >
+                <FaTrashAlt />
+                <span className="tooltip-text">Delete</span>
+              </button>
+            </>
+          )}
+        </div>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
     },
   ];
+
   return (
     <>
-    <Header />
-    <div className="test-index-wrapper">
-      <div className="test-index-container">
-        <div className="test-index-header">
-          <h1 className="breadcrumb"> All Teachers Lists</h1>
+      <Helmet>
+        <title>Teachers</title>
+        <meta name="description" content="Teachers" />
+      </Helmet>
+      <Header />
+      <div className="test-index-wrapper">
+        <div className="test-index-container">
+          <div className="test-index-header">
+            <h1 className="breadcrumb">All Teachers Lists</h1>
+
+            
+           
+          </div>
+
+          <div className="my-data-table">
+            <DataTable
+              columns={columns}
+              data={getCurrentPageData()}
+              searchoption={true}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+            />
+          </div>
         </div>
 
-        <div className="my-data-table">
-          <DataTable
-            columns={columns}
-            data={paginatedData}
-            availableActions={["delete", "archive", "download", "tag", "more"]}
-            enableToggle={false}
+        {!fullViewMode && rowsPerPage < filteredData.length && (
+          <PaginationButtons
+            filteredQuestions={filteredData}
+            rowsPerPage={rowsPerPage}
+            currentPage={currentPage}
+            loadMore={() => setRowsPerPage(prev => Math.min(prev + 5, filteredData.length))}
+            fullView={() => {
+              setRowsPerPage(filteredData.length);
+              setFullViewMode(true);
+            }}
+            fullViewMode={fullViewMode}
           />
-        </div>
+        )}
 
-        {/* Other Modals */}
-        {/* <ShareModal
-          isOpen={isShareModalOpen}
-          onClose={() => setIsShareModalOpen(false)}
-          emails={emails}
-          setEmails={setEmails}
-          testName={selectedTest}
-        /> */}
-        {/* <DispatchModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          scheduledTests={mockScheduledTests}
-          selectedTest={selectedTest}
-        /> */}
+        <PaginationInfo
+          filteredQuestions={filteredData}
+          rowsPerPage={rowsPerPage}
+          currentPage={currentPage}
+          label="Teachers"
+          totalItems={data.length}
+          isSearching={searchQuery.length > 0}
+        />
       </div>
-      {/* <DispatchModal isOpen={isModalOpen} onClose={closeModal} selectedTest={selectedTest} /> */}
-
-      <PaginationButtons
-        filteredQuestions={data}
-        rowsPerPage={rowsPerPage}
-        currentPage={currentPage}
-        loadMore={loadMore}
-        fullView={fullView}
-        isDataTableVisible={dataTableVisible} // <-- Pass true/false based on state
-      />
-
-      <PaginationInfo
-        filteredQuestions={data}
-        rowsPerPage={rowsPerPage}
-        currentPage={currentPage}
-        label="Tests"
-      />
-
-    </div>
     </>
   );
 };
+
 export default TeachersIndex;

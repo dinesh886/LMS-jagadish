@@ -296,7 +296,7 @@ tr:hover {
   padding: 20px;
   /* background-color: #f8f9fa; */
   border-radius: 8px;
-  margin: 8px 0;
+  /* margin: 8px 0; */
 }
 
 /* .answer-section {
@@ -422,4 +422,32 @@ tr:hover {
 
 .col-questions .katex {
   font-size: 0.95em;
+}
+/* Add to your CSS file */
+/* .programming-section {
+  margin-top: 1rem;
+} */
+
+.code-content {
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.table-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.table-section th,
+.table-section td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table-section th {
+  background-color: #f2f2f2;
+  text-align: left;
 }

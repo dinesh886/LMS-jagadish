@@ -11,11 +11,11 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 24px;
-  margin: 20px 0;
+  /* margin: 20px 0; */
 }
 
 .status-header {
-  margin-bottom: 24px;
+  margin-bottom: 10px;
 }
 
 .status-title {
@@ -73,19 +73,30 @@
 }
 
 .status-metrics {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  /* display: grid; */
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+    /* allow wrapping on smaller screens */
+  /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
   gap: 16px;
 }
-
 .metric {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px;
+  padding: 12px 0px 0px 0px;
   border-radius: 8px;
 }
+@media (max-width: 768px) {
 
+
+  .metric {
+    width: 100%;
+    justify-content: center;
+    /* center content inside */
+  }
+}
 .metric-icon {
   width: 36px;
   height: 36px;
@@ -95,21 +106,32 @@
   justify-content: center;
 }
 
-.metric-details {
+/* .metric-details {
   display: flex;
   flex-direction: column;
-}
+} */
+.metric-details {
 
+
+      display: flex;
+      justify-content: space-between;
+      /* margin-top: 10px; */
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    
+    
+}
 .metric-label {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 2px;
+  font-size: 16px;
+  color: #000;
+  /* margin-bottom: 2px; */
 }
 
 .metric-value {
   font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
+  /* font-weight: 600; */
+  color: #000;
 }
 
 /* Color variants */
@@ -131,12 +153,20 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .status-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 320px) {
+  .status-metrics {
+    display: grid;
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (max-width: 480px) {
   .status-metrics {
+    display: grid;
     grid-template-columns: 1fr;
   }
 

@@ -9,6 +9,8 @@ import SectionwiseAnalysis from "./SectionwiseAnalysis/SectionwiseAnalysis";
 import QuestionBank from "../../QuestionBanks/QuestionBank";
 import QuestionwiseRanking from "./QuestionwiseRanking/QuestionwiseRanking";
 import Header from "../../../header/header";
+import { Helmet } from "react-helmet";
+
 const TestStudentOverview = () => {
     const { studentId, testId } = useParams();
 
@@ -26,6 +28,10 @@ const TestStudentOverview = () => {
 
     return (
         <>
+            <Helmet>
+                <title>Student Performance</title>
+                <meta name="description" content="Scheduld Test , Ongoing,Upcomming , Completed" />
+            </Helmet>
             <Header />
         <div className="student-test-overview">
             <ScoreDetails />

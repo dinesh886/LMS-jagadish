@@ -46,11 +46,24 @@
     /* border-bottom: 1px solid var(--relativeperformance-border-color); */
 }
 
+.relativeperformance-header-content  {
+   
+            display: flex;
+            align-items: center;
+            gap: 10px;   
+    
+}
+.relativeperformance-header-content svg {
+   
+    color:var(--primary-color);
+    
+}
 .relativeperformance-header-content h2 {
+    display: flex;
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--relativeperformance-text-primary);
-    margin: 0 0 0.25rem 0;
+   margin-bottom: 0;
 }
 
 .relativeperformance-header-subtitle {

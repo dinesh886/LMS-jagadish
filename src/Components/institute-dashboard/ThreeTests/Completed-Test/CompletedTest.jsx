@@ -146,9 +146,16 @@ const CompletedTest = ({ onViewDetails }) => {
         {
             name: "Date",
             selector: "endTime",
-            cell: (row) => new Date(row.endTime).toLocaleDateString(),
+            cell: (row) => {
+                const date = new Date(row.endTime);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
+                const year = date.getFullYear();
+                return `${day}-${month}-${year}`; // format: DD-MM-YYYY
+            },
             sortable: true,
         },
+          
         {
             name: "Duration",
             selector: "duration",
@@ -174,13 +181,15 @@ const CompletedTest = ({ onViewDetails }) => {
 
     return (
         <>
-            <div className="status-header">
-                <div className="status-title status-title2">
-                    <h3>Completed Tests</h3>
-                </div>
-            </div>
+           
 
             <div className="completed-test">
+                <div className="status-header">
+                    <div className="status-title status-title2">
+                        <FileCheck2 size={20} className="status-title-icon" />
+                        <h3>Completed Tests</h3>
+                    </div>
+                </div>
                 <DataTable
                     columns={columns}
                     data={getCurrentPageData()}

@@ -1,6 +1,5 @@
-
 import DataTable from "../../../ReusableComponents/TableComponent/TableComponent";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdOutlineArchive } from "react-icons/md";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PaginationButtons from "../../../ReusableComponents/Pagination/PaginationButton";
@@ -23,239 +22,285 @@ import {
   FaCheck,
   FaTimes,
   FaChevronDown,
-  FaArrowUp
-
+  FaRegWindowRestore,
+  FaArrowUp,
+  FaUserCheck,
+  FaUserTimes,
+  FaUsers
 } from "react-icons/fa";
-// import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaCopy } from "react-icons/fa";
-import TopBar from "../../class-batch/classtopbar/classtopbar";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import { RiInboxUnarchiveFill } from "react-icons/ri";
+
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { toast } from "react-toastify";
+import ToggleSwitch from "../../../ReusableComponents/ToggleSwitch/ToggleSwitch";
 
 const Trashed = () => {
-  const data = [
-    { id: 1, email: 'teacher1@example.com', date: '26-12-2024', status: 'Inactive' },
+  const initialData = [
+    { id: 1, name: "John Doe", email: 'teacher1@example.com', date: '26-12-2024', status: 'inactive' },
+    { id: 2, name: "Jane Smith", email: 'teacher2@example.com', date: '27-12-2024', status: 'active' },
    
   ];
 
-  const [rowsPerPage, setRowsPerPage] = useState(5); // Set the number of rows per page
-  const [showButtons, setShowButtons] = useState(true);
+  // State management
+  const [data, setData] = useState(initialData);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataTableVisible, setDataTableVisible] = useState(false);
-  const paginatedData = data.slice(0, rowsPerPage);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
+  const [fullViewMode, setFullViewMode] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [currentView, setCurrentView] = useState("all"); // 'all', 'active', 'inactive'
 
-  const loadMore = () => {
-    setRowsPerPage((prevRows) => {
-      const newRows = prevRows + 5;
-      if (newRows >= data.length) setShowButtons(false); // Hide buttons if all data is shown
-      return newRows;
+  // Check if screen is mobile size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.mobile-actions-dropdown')) {
+        setOpenDropdownId(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Filter data based on search and status
+  const getFilteredData = () => {
+    let filteredData = data;
+
+    // Filter by current view
+    if (currentView === "active") {
+      filteredData = filteredData.filter((teacher) => teacher.status === "active");
+    } else if (currentView === "inactive") {
+      filteredData = filteredData.filter((teacher) => teacher.status === "inactive");
+    }
+
+    // Apply search and status filters
+    return filteredData.filter((teacher) => {
+      const matchesSearch =
+        searchQuery === "" ||
+        teacher.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        teacher.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        teacher.date.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesStatus = filterStatus === "" || teacher.status === filterStatus;
+
+      return matchesSearch && matchesStatus;
     });
   };
 
+  const filteredData = getFilteredData();
 
-  const fullView = () => {
-    setRowsPerPage(data.length); // Show all data
-    setShowButtons(false); // Hide buttons after Full View
+  // Get current page data
+  const getCurrentPageData = () => {
+    if (fullViewMode) {
+      return filteredData;
+    }
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    return filteredData.slice(startIndex, startIndex + rowsPerPage);
   };
 
+  // Toggle teacher status
+  const toggleTeacherStatus = (teacherId) => {
+    setData(prevData =>
+      prevData.map(teacher =>
+        teacher.id === teacherId
+          ? { ...teacher, status: teacher.status === "active" ? "inactive" : "active" }
+          : teacher
+      )
+    );
 
+    const teacher = data.find(t => t.id === teacherId);
+    toast.success(
+      `Teacher ${teacher.name} has been ${teacher.status === "active" ? "deactivated" : "activated"}`,
+      { position: "top-right", autoClose: 3000 }
+    );
+  };
 
+  const handleArchive = (teacher) => {
+    toast.info(`Archiving teacher ${teacher.name}`, { autoClose: 2000 });
+    setOpenDropdownId(null); // Close dropdown after action
+  };
 
+  const handleDelete = (teacher) => {
+    toast.warning(`Deleting teacher ${teacher.name}`, { autoClose: 2000 });
+    setOpenDropdownId(null); // Close dropdown after action
+  };
 
+  const toggleDropdown = (rowId) => {
+    setOpenDropdownId(openDropdownId === rowId ? null : rowId);
+  };
 
-  // Define columns for the DataTable
-  // const columns = [
+  // Get counts for different views
+  const activeCount = data.filter((teacher) => teacher.status === "active").length;
+  const inactiveCount = data.filter((teacher) => teacher.status === "inactive").length;
+  const totalCount = data.length;
 
-  //    {
-  //     name: "Name",
-  //     selector: (row) => row.name,
-  //     sortable: true,
-  //     cell: (row) => (
-  //       <Link to={`/QuestionBank/${row.id}/add`}>
-  //         <span className="row-link">{row.name}</span>
-  //       </Link>
-  //     ),
-
-  //   },
-  //   {
-  //     name: "Questions",
-  //     selector: (row) => row.questions,
-  //     sortable: true,
-  //     width: "190px",
-  //   },
-  //   {
-  //     name: "Last Modified",
-  //     selector: (row) => row.lastModified,
-  //     sortable: true,
-  //     format: (row) => {
-  //       const date = new Date(row.lastModified);
-  //       return date instanceof Date && !isNaN(date)
-  //         ? date.toLocaleDateString("en-US", {
-  //             year: "numeric",
-  //             month: "short",
-  //             day: "numeric",
-  //           })
-  //         : "23-12-2024"; // Return a fallback in case the date is invalid
-  //     },
-
-  //   },
-  //   {
-  //     name: "Actions",
-  //     cell: (row) => (
-  //       <div className="action-buttons">
-  //         {/* Add Button */}
-  //         <Link to={`/QuestionBank/${row.id}/add`}>
-  //           <button className="action-button add">
-  //             <FontAwesomeIcon icon={faFolderPlus} />
-  //           </button>
-  //         </Link>
-  //         <button
-  //           className="action-button pdf"
-  //           onClick={() => console.log("PDF", row.id)}
-  //         >
-  //           <FontAwesomeIcon icon={faFilePdf} />
-  //         </button>
-  //         <button
-  //           className="action-button folder"
-  //           onClick={() => console.log("Folder", row.id)}
-  //         >
-  //           <FontAwesomeIcon icon={faFolder} />
-  //         </button>
-  //         <button
-  //           className="action-button archive"
-  //           onClick={() => console.log("Archive", row.id)}
-  //         >
-  //             <MdOutlineArchive  icon={faArchive} />
-
-  //         </button>
-  //         <button
-  //           className="action-button delete"
-  //           onClick={() => console.log("Delete", row.id)}
-  //         >
-  //           <FontAwesomeIcon icon={faTrash} />
-  //         </button>
-  //       </div>
-  //     ),
-
-  //     ignoreRowClick: true,
-  //     allowOverflow: true,
-  //     button: true,
-  //   },
-  // ];
   const columns = [
     {
-      name: (
-        <div className="flex items-center">
-          <span>Email</span>
-        </div>
-      ),
-      selector: "test",
+      name: "Teacher Names",
+      selector: "name",
       cell: (row) => (
-        <div className="flex items-center">
-          <Link >
-            <span className="row-link">{row.email}</span>
-          </Link>
-        </div>
+        <Link to={`/teacher/${row.id}`} className="row-link">
+          {row.name}
+        </Link>
       ),
     },
-    // {
-    //   name: (
-    //     <div className="cursor-pointer">
-    //       Questions
-    //     </div>
-    //   ),
-    //   selector: "questions",
-    //   sortable: true,
-    // },
     {
-      name: (
-        <div className="cursor-pointer">
-          Added Date
-        </div>
-      ),
+      name: "Teacher Emails",
+      selector: "email",
+    },
+    {
+      name: "Added Date",
       selector: "date",
-      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: "status",
+      cell: (row) => (
+        <span className={`status-text ${row.status === "active" ? "active" : "inactive"}`}>
+          {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+        </span>
+      ),
     },
     {
       name: "Actions",
       selector: "actions",
-      sortable: false, // Ensures sorting is disabled for this column
       cell: (row) => (
-        <div className="test-action-buttons flex gap-2">
+        <div className="action-button-group">
+          {isMobile ? (
+            <div className="mobile-actions-dropdown">
+              <button
+                className="test-action-button mobile-menu-trigger"
+                onClick={() => toggleDropdown(row.id)}
+                aria-label="More actions"
+              >
+                <FaEllipsisH />
+              </button>
 
-
-          {/* <button className="test-action-button pdf" aria-label="Download PDF">
-            <FaFilePdf />
-            <span className="tooltip-text">Download PDF</span>
-          </button>
-          <button className="test-action-button copy" aria-label="Copy">
-            <FaFolderPlus />
-            <span className="tooltip-text">Folder</span>
-          </button>
-
-          <button className="test-action-button archive" aria-label="Archive">
-            <FaArchive />
-            <span className="tooltip-text">Archive</span>
-          </button> */}
-          <button className="test-action-button delete" aria-label="Delete">
-            <FaTrashAlt />
-            <span className="tooltip-text">Delete</span>
-          </button>
+              {openDropdownId === row.id && (
+                <div className="mobile-actions-menu">
+                  <div className="mobile-action-item">
+                    <ToggleSwitch
+                      isActive={row.status === "active"}
+                      onToggle={() => toggleTeacherStatus(row.id)}
+                    />
+                    <span>{row.status === "active" ? "Deactivate" : "Activate"}</span>
+                  </div>
+                  <button
+                    className="mobile-action-item archive"
+                    onClick={() => handleArchive(row)}
+                  >
+                     <FaRegWindowRestore />
+                    <span> Restore</span>
+                  </button>
+                  <button
+                    className="mobile-action-item delete"
+                    onClick={() => handleDelete(row)}
+                  >
+                    <FaTrashAlt />
+                    <span>Delete</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              {/* <ToggleSwitch
+                className="test-action-button"
+                isActive={row.status === "active"}
+                onToggle={() => toggleTeacherStatus(row.id)}
+              /> */}
+              <button
+                className="test-action-button archive"
+                onClick={() => handleArchive(row)}
+                title="Archive teacher"
+              >
+                  <FaRegWindowRestore />
+                <span className="tooltip-text">Restore</span>
+              </button>
+              <button
+                className="test-action-button delete"
+                onClick={() => handleDelete(row)}
+                title="Delete teacher"
+              >
+                <FaTrashAlt />
+                <span className="tooltip-text">Delete</span>
+              </button>
+            </>
+          )}
         </div>
       ),
+      ignoreRowClick: true,
+      allowOverflow: true,
     },
   ];
+
   return (
     <>
+      <Helmet>
+        <title>Teachers</title>
+        <meta name="description" content="Teachers" />
+      </Helmet>
       <Header />
-    <div className="test-index-wrapper">
-      <div className="test-index-container">
-        <div className="test-index-header">
-          <h1 className="breadcrumb"> Trashed Lists</h1>
+      <div className="test-index-wrapper">
+        <div className="test-index-container">
+          <div className="test-index-header">
+            <h1 className="breadcrumb">All Teachers Lists</h1>
+
+
+
+          </div>
+
+          <div className="my-data-table">
+            <DataTable
+              columns={columns}
+              data={getCurrentPageData()}
+              searchoption={true}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+            />
+          </div>
         </div>
 
-        <div className="my-data-table">
-          <DataTable
-            columns={columns}
-            data={paginatedData}
-            availableActions={["delete", "archive", "download", "tag", "more"]}
-            enableToggle={false}
+        {!fullViewMode && rowsPerPage < filteredData.length && (
+          <PaginationButtons
+            filteredQuestions={filteredData}
+            rowsPerPage={rowsPerPage}
+            currentPage={currentPage}
+            loadMore={() => setRowsPerPage(prev => Math.min(prev + 5, filteredData.length))}
+            fullView={() => {
+              setRowsPerPage(filteredData.length);
+              setFullViewMode(true);
+            }}
+            fullViewMode={fullViewMode}
           />
-        </div>
+        )}
 
-        {/* Other Modals */}
-        {/* <ShareModal
-          isOpen={isShareModalOpen}
-          onClose={() => setIsShareModalOpen(false)}
-          emails={emails}
-          setEmails={setEmails}
-          testName={selectedTest}
-        /> */}
-        {/* <DispatchModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          scheduledTests={mockScheduledTests}
-          selectedTest={selectedTest}
-        /> */}
+        <PaginationInfo
+          filteredQuestions={filteredData}
+          rowsPerPage={rowsPerPage}
+          currentPage={currentPage}
+          label="Teachers"
+          totalItems={data.length}
+          isSearching={searchQuery.length > 0}
+        />
       </div>
-      {/* <DispatchModal isOpen={isModalOpen} onClose={closeModal} selectedTest={selectedTest} /> */}
-
-      <PaginationButtons
-        filteredQuestions={data}
-        rowsPerPage={rowsPerPage}
-        currentPage={currentPage}
-        loadMore={loadMore}
-        fullView={fullView}
-        isDataTableVisible={dataTableVisible} // <-- Pass true/false based on state
-      />
-
-      <PaginationInfo
-        filteredQuestions={data}
-        rowsPerPage={rowsPerPage}
-        currentPage={currentPage}
-        label="Tests"
-      />
-
-    </div>
     </>
   );
 };
-export default Trashed
+
+export default Trashed;
